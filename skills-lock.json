@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "skills": {
+    "animation-designer": {
+      "source": "daffy0208/ai-dev-standards",
+      "sourceType": "github",
+      "computedHash": "8d67411378f8609415a2ea727013490c8432bfd941ae3f4a343b8bf4d874ec81"
+    },
+    "framer-motion": {
+      "source": "mindrally/skills",
+      "sourceType": "github",
+      "computedHash": "4bbfec771a1a13e3462cdd30c442fd09513c50d13a2652a275a8e09ad4532189"
+    },
+    "react-query-best-practices": {
+      "source": "arraydude/agent-skills",
+      "sourceType": "github",
+      "computedHash": "2ee19b84bca0210eed26d15a52a58a20118de66cac11158f9f14e3bcba53fcc2"
+    },
+    "typescript-magician": {
+      "source": "mcollina/skills",
+      "sourceType": "github",
+      "computedHash": "f6374b47974b828435aabb03dcf474ac328c1439fb4afcb216e274435fc4bba7"
+    }
+  }
+}
