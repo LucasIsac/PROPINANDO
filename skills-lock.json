@@ -11,15 +11,45 @@
       "sourceType": "github",
       "computedHash": "4bbfec771a1a13e3462cdd30c442fd09513c50d13a2652a275a8e09ad4532189"
     },
+    "javascript-testing-patterns": {
+      "source": "wshobson/agents",
+      "sourceType": "github",
+      "computedHash": "b2c3ffd537e7534c6f9e118b9ba0b5b6ce99a5f2d8c03258c66ff4ae875d443a"
+    },
+    "n8n-workflow-patterns": {
+      "source": "czlonkowski/n8n-skills",
+      "sourceType": "github",
+      "computedHash": "52998bacfadee37835bfa434d08a23c76fa04092f757660708fe014c3594877c"
+    },
+    "nodejs-backend-patterns": {
+      "source": "wshobson/agents",
+      "sourceType": "github",
+      "computedHash": "47f9ab40a7ddedd69089da1390080735f6715356916d6fc43f525522887d7dfe"
+    },
+    "prisma-database-setup": {
+      "source": "prisma/skills",
+      "sourceType": "github",
+      "computedHash": "72e2360923e949261a15ca1dbcfac5662ec5e851f6045ffb13163a55a083bcea"
+    },
     "react-query-best-practices": {
       "source": "arraydude/agent-skills",
       "sourceType": "github",
       "computedHash": "2ee19b84bca0210eed26d15a52a58a20118de66cac11158f9f14e3bcba53fcc2"
     },
+    "security-best-practices": {
+      "source": "supercent-io/skills-template",
+      "sourceType": "github",
+      "computedHash": "c5ddd50338549d28b2edd45cec131d6a231349b0671a093b3b7e3b51d4780ab8"
+    },
     "typescript-magician": {
       "source": "mcollina/skills",
       "sourceType": "github",
       "computedHash": "f6374b47974b828435aabb03dcf474ac328c1439fb4afcb216e274435fc4bba7"
+    },
+    "zod": {
+      "source": "pproenca/dot-skills",
+      "sourceType": "github",
+      "computedHash": "3307ca1bef37ac4f32264c971c2b54ca3191f4f248a820b2c1255fc045ceb125"
     }
   }
 }
