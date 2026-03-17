@@ -1,0 +1,294 @@
+// ============================================================
+// prisma/schema.prisma — Propinando MVP
+// Fuente de verdad del esquema de base de datos.
+// Para aplicar cambios: pnpm --filter api prisma migrate dev
+// ============================================================
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================
+// ENUMS
+// ============================================================
+
+enum UserRole {
+  SUPER_ADMIN
+  STORE_ADMIN
+  EMPLOYEE
+}
+
+enum TipStatus {
+  INICIADO
+  PAGADO
+  CANCELADO
+  FALLIDO
+  EXPIRADO
+  REEMBOLSADO
+}
+
+enum SplitMode {
+  EQUAL
+  PERCENTAGE
+  MANUAL
+}
+
+enum VerificationStatus {
+  PENDIENTE
+  APROBADO
+  RECHAZADO
+}
+
+// ============================================================
+// MODELO: users
+// ============================================================
+
+model User {
+  id                String             @id @default(uuid()) @db.Uuid
+  email             String             @unique @db.VarChar(255)
+  passwordHash      String             @map("password_hash") @db.VarChar(255)
+  firstName         String             @map("first_name") @db.VarChar(100)
+  lastName          String             @map("last_name") @db.VarChar(100)
+  phone             String?            @db.VarChar(20)
+  dniEncrypted      String?            @map("dni_encrypted") @db.Text
+  photoUrl          String?            @map("photo_url") @db.VarChar(500)
+  role              UserRole
+  isActive          Boolean            @default(true) @map("is_active")
+  twoFactorSecret   String?            @map("two_factor_secret") @db.Text
+  twoFactorEnabled  Boolean            @default(false) @map("two_factor_enabled")
+  createdAt         DateTime           @default(now()) @map("created_at")
+  updatedAt         DateTime           @updatedAt @map("updated_at")
+
+  venueAdmins       VenueAdmin[]
+  employee          Employee?
+  refreshTokens     RefreshToken[]
+  auditLogs         AuditLog[]
+
+  @@map("users")
+}
+
+// ============================================================
+// MODELO: venues
+// ============================================================
+
+model Venue {
+  id              String    @id @default(uuid()) @db.Uuid
+  name            String    @db.VarChar(255)
+  cuit            String?   @db.VarChar(20)
+  address         String?   @db.VarChar(500)
+  type            String?   @db.VarChar(50)
+  logoUrl         String?   @map("logo_url") @db.VarChar(500)
+  qrCode          String?   @map("qr_code") @db.Text
+  qrToken         String    @unique @default(uuid()) @map("qr_token") @db.Uuid
+  isActive        Boolean   @default(true) @map("is_active")
+  isSandbox       Boolean   @default(true) @map("is_sandbox")
+  commissionRate  Decimal   @default(0.0800) @map("commission_rate") @db.Decimal(5, 4)
+  mpAccessToken   String?   @map("mp_access_token") @db.Text
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  venueAdmins     VenueAdmin[]
+  sectors         Sector[]
+  employees       Employee[]
+  tips            Tip[]
+
+  @@map("venues")
+}
+
+// ============================================================
+// MODELO: venue_admins
+// ============================================================
+
+model VenueAdmin {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  venueId   String   @map("venue_id") @db.Uuid
+  isOwner   Boolean  @default(false) @map("is_owner")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  venue     Venue    @relation(fields: [venueId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, venueId])
+  @@index([userId])
+  @@index([venueId])
+  @@map("venue_admins")
+}
+
+// ============================================================
+// MODELO: sectors
+// ============================================================
+
+model Sector {
+  id           String    @id @default(uuid()) @db.Uuid
+  venueId      String    @map("venue_id") @db.Uuid
+  name         String    @db.VarChar(100)
+  splitMode    SplitMode @default(EQUAL) @map("split_mode")
+  isActive     Boolean   @default(true) @map("is_active")
+  displayOrder Int       @default(0) @map("display_order")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  venue        Venue      @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  employees    Employee[]
+  tips         Tip[]
+
+  @@index([venueId])
+  @@map("sectors")
+}
+
+// ============================================================
+// MODELO: employees
+// ============================================================
+
+model Employee {
+  id                   String             @id @default(uuid()) @db.Uuid
+  userId               String             @unique @map("user_id") @db.Uuid
+  venueId              String             @map("venue_id") @db.Uuid
+  sectorId             String?            @map("sector_id") @db.Uuid
+  displayName          String             @map("display_name") @db.VarChar(100)
+  photoUrl             String?            @map("photo_url") @db.VarChar(500)
+  splitPercentage      Decimal?           @map("split_percentage") @db.Decimal(5, 2)
+  paymentAccountEnc    String?            @map("payment_account_enc") @db.Text
+  qrPersonalToken      String             @unique @default(uuid()) @map("qr_personal_token") @db.Uuid
+  mpCollectorId        String?            @map("mp_collector_id") @db.VarChar(50)
+  mpAccessTokenEnc     String?            @map("mp_access_token_enc") @db.Text
+  verificationStatus   VerificationStatus @default(PENDIENTE) @map("verification_status")
+  isActive             Boolean            @default(true) @map("is_active")
+  createdAt            DateTime           @default(now()) @map("created_at")
+  updatedAt            DateTime           @updatedAt @map("updated_at")
+
+  user                 User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  venue                Venue              @relation(fields: [venueId], references: [id], onDelete: Cascade)
+  sector               Sector?            @relation(fields: [sectorId], references: [id])
+  tips                 Tip[]
+  tipSplits            TipSplit[]
+
+  @@index([venueId])
+  @@index([qrPersonalToken])
+  @@map("employees")
+}
+
+// ============================================================
+// MODELO: tips
+// ============================================================
+
+model Tip {
+  id               String    @id @default(uuid()) @db.Uuid
+  venueId          String    @map("venue_id") @db.Uuid
+  sectorId         String?   @map("sector_id") @db.Uuid
+  employeeId       String?   @map("employee_id") @db.Uuid
+
+  grossAmount      Decimal   @map("gross_amount") @db.Decimal(12, 2)
+  commissionRate   Decimal   @map("commission_rate") @db.Decimal(5, 4)
+  commissionAmount Decimal   @map("commission_amount") @db.Decimal(12, 2)
+  netAmount        Decimal   @map("net_amount") @db.Decimal(12, 2)
+
+  rating           Int?
+  comment          String?   @db.VarChar(500)
+
+  status           TipStatus @default(INICIADO)
+
+  mpPreferenceId   String?   @map("mp_preference_id") @db.VarChar(100)
+  mpPaymentId      String?   @unique @map("mp_payment_id") @db.VarChar(100)
+  mpStatus         String?   @map("mp_status") @db.VarChar(50)
+
+  paidAt           DateTime? @map("paid_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  venue            Venue      @relation(fields: [venueId], references: [id])
+  sector           Sector?    @relation(fields: [sectorId], references: [id])
+  employee         Employee?  @relation(fields: [employeeId], references: [id])
+  tipSplits        TipSplit[]
+
+  @@index([venueId])
+  @@index([employeeId])
+  @@index([status])
+  @@index([mpPaymentId])
+  @@index([createdAt])
+  @@map("tips")
+}
+
+// ============================================================
+// MODELO: tip_splits
+// ============================================================
+
+model TipSplit {
+  id          String    @id @default(uuid()) @db.Uuid
+  tipId       String    @map("tip_id") @db.Uuid
+  employeeId  String    @map("employee_id") @db.Uuid
+  netAmount   Decimal   @map("net_amount") @db.Decimal(12, 2)
+  percentage  Decimal   @db.Decimal(5, 2)
+  paidAt      DateTime? @map("paid_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  tip         Tip       @relation(fields: [tipId], references: [id], onDelete: Cascade)
+  employee    Employee  @relation(fields: [employeeId], references: [id])
+
+  @@index([tipId])
+  @@index([employeeId])
+  @@map("tip_splits")
+}
+
+// ============================================================
+// MODELO: propinando_config
+// ============================================================
+
+model PropinanduConfig {
+  id             String   @id @default(uuid()) @db.Uuid
+  commissionRate Decimal  @default(0.0800) @map("commission_rate") @db.Decimal(5, 4)
+  updatedById    String?  @map("updated_by") @db.Uuid
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  @@map("propinando_config")
+}
+
+// ============================================================
+// MODELO: refresh_tokens
+// ============================================================
+
+model RefreshToken {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  tokenHash String   @map("token_hash") @db.VarChar(255)
+  expiresAt DateTime @map("expires_at")
+  revoked   Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([tokenHash])
+  @@map("refresh_tokens")
+}
+
+// ============================================================
+// MODELO: audit_log
+// ============================================================
+
+model AuditLog {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String?  @map("user_id") @db.Uuid
+  action    String   @db.VarChar(100)
+  entity    String   @db.VarChar(50)
+  entityId  String?  @map("entity_id") @db.Uuid
+  payload   Json?
+  ipAddress String?  @map("ip_address") @db.VarChar(45)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user      User?    @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([entity])
+  @@index([entityId])
+  @@index([createdAt])
+  @@map("audit_log")
+}

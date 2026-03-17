@@ -1,0 +1,47 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "db:migrate": "prisma migrate dev",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:studio": "prisma studio",
+    "test": "vitest"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^6",
+    "bcryptjs": "^2.4.3",
+    "express": "^4.21",
+    "jsonwebtoken": "^9",
+    "zod": "^3",
+    "helmet": "^8",
+    "cors": "^2",
+    "express-rate-limit": "^7.0.0",
+    "cookie-parser": "^1",
+    "morgan": "^1",
+    "dotenv": "^16",
+    "mercadopago": "^2",
+    "axios": "^1",
+    "uuid": "^11",
+    "@otplib/preset-default": "^12"
+  },
+  "devDependencies": {
+    "@types/express": "^5",
+    "@types/bcryptjs": "^2",
+    "@types/jsonwebtoken": "^9",
+    "@types/cookie-parser": "^1",
+    "@types/morgan": "^1",
+    "@types/cors": "^2",
+    "@types/uuid": "^10",
+    "prisma": "^6",
+    "tsx": "^4",
+    "vitest": "^3",
+    "typescript": "^5"
+  }
+}

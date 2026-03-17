@@ -1,0 +1,13 @@
+{
+  "name": "propinando",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --filter web dev",
+    "dev:api": "pnpm --filter api dev",
+    "build": "pnpm --filter web build && pnpm --filter api build",
+    "lint": "pnpm --filter web lint"
+  },
+  "devDependencies": {
+    "typescript": "^5"
+  }
+}
