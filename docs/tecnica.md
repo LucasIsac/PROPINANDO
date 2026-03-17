@@ -44,9 +44,9 @@ n8n actuará como worker externo consumiendo el API o Webhooks:
 - **Alertas:** Notificación de `payment.failed` a soporte técnico.
 
 ## 7. ESTRUCTURA DE DATOS (POSTGRESQL) - ENTIDADES CLAVE
-1. **Locals:** ID, Name, Address, AdminID.
-2. **Employees:** UserID, LocalID, CBU_Encrypted, Alias, Role.
-3. **Transactions:** ID (UUID), GrossAmount (P), Commission (C), NetAmount (N), Status, ExternalRef, EmployeeID.
+1. **venues:** ID, Name, Address, AdminID.
+2. **employees:** UserID, VenueID, CBU_Encrypted, Alias, Role.
+3. **tips:** ID (UUID), GrossAmount (P), Commission (C), NetAmount (N), Status, ExternalRef, EmployeeID.
 
 ## 8. ESTÁNDAR DE CÓDIGO (CLEAN CODE)
 - **Backend:** Controladores (HTTP) -> Servicios (Business Logic) -> Prisma (Data).

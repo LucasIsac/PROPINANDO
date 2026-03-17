@@ -26,15 +26,17 @@
 - **Seguridad:** Validar firmas HMAC en Webhooks de Mercado Pago
 
 ## 5. RBAC
-- **SUPER_ADMIN:** Comisiones globales (C)
-- **LOCAL_ADMIN:** Gestión empleados, montos brutos (P)
-- **EMPLOYEE:** Propinas netas (N), gestión Alias/CBU
+- **SYSTEM_OWNER:** Acceso total, comisiones globales (C), gestión de venues
+- **STORE_ADMIN:** Gestión de empleados, montos brutos (P), gestión de venue
+- **EMPLOYEE:** Propinas netas (N), gestión de Alias/CBU
+- **CUSTOMER:** Usuario que realiza la propina
 
 ## 6. Skills Registry (Carga Bajo Demanda)
 
 ### 🛡️ Área: Seguridad y Blindaje (Prioridad Máxima)
 - **Security Architect (`security-best-practices`):** Inyectar middlewares de seguridad (Helmet, Rate Limit), gestionar secretos en `.env` y rotación de tokens.
-- **Mercado Pago Guard (`skills/mercado-pago-split.skill.md`):** Validar firmas HMAC de webhooks y ejecutar la lógica de comisión (8%) con idempotencia.
+- **Mercado Pago Guard (`skills/mercado-pago-split.skill.md`):** Validar firmas HMAC-SHA256, lógica de comisión (8%), idempotencia, anti race condition.
+- **RBAC PropinanDO (`skills/propinando-rbac.skill.md`):** Middleware ownership.ts con visibilidad por rol y retorno 403 Forbidden.
 
 ### ⚙️ Área: Backend & Data Integrity
 - **Prisma Expert (`prisma-database-setup`):** Diseñar el `schema.prisma` (v7), gestionar migraciones en PostgreSQL y configurar driver adapters.
@@ -48,6 +50,7 @@
 
 ### 🤖 Área: Automatización y Calidad
 - **n8n Workflow Expert (`n8n-workflow-patterns`):** Diseñar la estructura de los payloads para los webhooks de reportes y notificaciones externas.
+- **n8n Payloads PropinanDO (`skills/propinando-n8n-payloads.skill.md`):** Contratos de eventos (tip.paid, tip.failed), montos en centavos, fechas ISO 8601.
 - **The Shield (`javascript-testing-patterns`):** Generar la suite de tests unitarios en Vitest para cada `Service` aprobado.
 
 ## 7. Workflow Determinista (SDD Pipeline)
