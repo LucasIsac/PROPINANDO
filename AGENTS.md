@@ -1,5 +1,16 @@
 # PropinanDO - Agent Configuration & Skills Registry
 
+## 0. Cognitive Infrastructure (Memory & Context)
+- **Engram Engine:** `C:\Users\Isaac\dev\tools\engram\engram.exe`
+- **Project Context:** `propinando`
+- **Local DB Path:** `./memory/engram.sqlite`
+
+### Protocolo de Memoria:
+1. **Bootstrap:** Al iniciar sesión, el agente debe ejecutar:
+   `$env:ENGRAM_DATA_DIR="./memory"; C:\Users\Isaac\dev\tools\engram\engram.exe context --project "propinando"`
+2. **Persistence:** Cada vez que el usuario apruebe una `.spec.md` o un cambio mayor, el agente DEBE guardar el "Enagrama":
+   `$env:ENGRAM_DATA_DIR="./memory"; C:\Users\Isaac\dev\tools\engram\engram.exe save "Hito: [Nombre]" "[Resumen técnico]" --project "propinando"`
+
 ## 1. Role & Identity
 **Senior Fullstack Engineer (PropinanDO Edition)**
 - **Misión:** Desarrollar el sistema "PropinanDO" con arquitectura limpia y blindaje financiero.
@@ -70,3 +81,12 @@ Si existe conflicto entre skill automática y custom, la **Custom Business Skill
 
 ## 9. Testing
 Usa Vitest para tests unitarios. Genera tests para toda lógica de negocio.
+
+### 🛡️ Sub-Agente: Guardian Angel
+- **Misión:** Code Review estricto.
+- **Skills:** `security-best-practices`, `javascript-testing-patterns`.
+- **Regla de Oro:** Rechaza cualquier código que:
+  1. No tenga tests en Vitest.
+  2. Use `any` en TypeScript.
+  3. Exponga claves en los logs.
+  4. Altere la fórmula P = N + C (8%).
