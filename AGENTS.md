@@ -82,7 +82,112 @@ Si existe conflicto entre skill automática y custom, la **Custom Business Skill
 ## 9. Testing
 Usa Vitest para tests unitarios. Genera tests para toda lógica de negocio.
 
-### 🛡️ Sub-Agente: Guardian Angel
+## 10. Orquestación de Sub-Agentes (Tony Stark Flow)
+
+### Flujo Determinista
+```
+┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
+│  ARCHITECT  │───>│    HUMAN    │───>│  ENGINEER   │───>│  GUARDIAN   │
+│   (Spec)    │    │   (HITL)    │    │   (Code)    │    │   (Audit)   │
+└─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘
+                                                                   │
+                                                                   ▼
+                                                            ┌─────────────┐
+                                                            │   ENGRAM    │
+                                                            │  (Memory)   │
+                                                            └─────────────┘
+```
+
+### Roles
+
+| Sub-Agente | Responsabilidad | Entregable |
+|------------|----------------|-------------|
+| **Architect** | Diseña specs, revisa docs | `.spec.md` aprobado |
+| **Engineer** | Implementa código según spec | Código + Tests |
+| **Guardian Angel** | Code review, auditoría | Reporte de aprobación/rechazo |
+
+## 11. Template de Plan (HITL)
+
+Antes de escribir código, SIEMPRE proponer este plan:
+
+```markdown
+## Plan para [Nombre de Tarea]
+
+### 1. Archivos a Modificar/Crear
+- `ruta/archivo1.ts` - [breve descripción]
+- `ruta/archivo2.ts` - [breve descripción]
+
+### 2. Skills a Activar
+- [ ] skill-name: [razón]
+- [ ] skill-name: [razón]
+
+### 3. Lógica de Negocio
+- [Describir el algoritmo o flujo]
+- [Incluir fórmula si aplica: P = N + C]
+
+### 4. Tests a Generar
+- [ ] Test case 1
+- [ ] Test case 2
+
+### 5. Riesgos Identificados
+- [ ] Riesgo 1 y mitigación
+- [ ] Riesgo 2 y mitigación
+
+---
+**Estado:** Esperando aprobación del usuario...
+```
+
+## 12. Carga Dinámica de Skills
+
+### Regla de Carga
+> "Antes de cada tarea, cargar la skill específica. No cargar skills no relacionadas."
+
+### Protocolo
+1. **Identificar** la tarea
+2. **Detectar** skills relevantes (ej: "dinero" → Mercado Pago Guard + Zod)
+3. **Cargar** solo los archivos necesarios
+4. **Ejecutar** la tarea
+5. **Liberar** memoria (no mantener skills no usadas)
+
+### Ejemplo de Activación
+```
+Tarea: "Crear endpoint de login"
+Skills activadas: [zod, security-best-practices, nodejs-backend-patterns]
+Skills ignoradas: [framer-motion, animation-designer, react-query]
+```
+
+## 13. Cierre de Engram (Post-Mortem)
+
+### Protocolo de Cierre
+Después de cada hito completado:
+
+1. **Guardar código** en el repositorio
+2. **Guardar Engram:**
+   ```
+   $env:ENGRAM_DATA_DIR="./memory"; engram.exe save "[Hito]" "[Aprendizaje técnico]"
+   ```
+3. **Documentar errores** para no repetirlos
+
+### Template de Aprendizaje
+```markdown
+## Aprendizaje del Hito [N]
+
+### Lo que funcionó
+- [Punto positivo 1]
+- [Punto positivo 2]
+
+### Errores evitados
+- [Aprendizaje 1]
+- [Aprendizaje 2]
+
+### Errores a evitar en el futuro
+- [Error común y cómo mitigarlo]
+```
+
+---
+
+## 🛡️ Sub-Agente: Guardian Angel
+
 - **Misión:** Code Review estricto.
 - **Skills:** `security-best-practices`, `javascript-testing-patterns`.
 - **Regla de Oro:** Rechaza cualquier código que:
@@ -90,3 +195,7 @@ Usa Vitest para tests unitarios. Genera tests para toda lógica de negocio.
   2. Use `any` en TypeScript.
   3. Exponga claves en los logs.
   4. Altere la fórmula P = N + C (8%).
+
+---
+
+**Queda prohibido implementar código sin una aprobación previa del plan de acción por parte del usuario (HITL).**
