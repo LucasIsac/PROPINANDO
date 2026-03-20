@@ -11,9 +11,11 @@
 | `PROJECT.md` | Este archivo - Documentación general del proyecto |
 | `README.md` | Instrucciones de uso del sistema (root) |
 | `AGENTS.md` | Configuración del framework Tony Stark |
+| `AGENTS-ORCHESTRATOR.md` | Protocolo de orquestación con sub-agentes |
 | `docs/tecnica.md` | Especificación técnica v1.0.0 |
 | `docs/database.md` | Documentación de la base de datos |
 | `docs/ENGRAM.md` | Guía de automatización de memoria Engram |
+| `docs/ORCHESTRATION.md` | Guía de orquestación y validación cruzada |
 | `docs/specs/001-database-schema.spec.md` | SPEC-001: Schema de BD ✅ |
 | `docs/specs/002-pricing-service.spec.md` | SPEC-002: PricingService ✅ |
 | `docs/specs/003-mercadopago-integration.spec.md` | SPEC-003: Mercado Pago 📋 |
@@ -119,6 +121,8 @@ PROPINANDO/
 │   ├── tecnica.md              # Especificación técnica v1.0.0
 │   ├── database.md             # Documentación DB
 │   ├── ENGRAM.md               # Guía de automatización Engram
+│   ├── ORCHESTRATION.md        # Guía de orquestación con sub-agentes
+│   ├── TASK-template.md        # Template para tareas en equipo
 │   └── specs/                  # SDD Pipeline
 │       ├── 001-database-schema.spec.md      # ✅ IMPLEMENTED
 │       ├── 002-pricing-service.spec.md      # ✅ IMPLEMENTED
@@ -130,7 +134,7 @@ PROPINANDO/
 │   └── propinando-n8n-payloads.skill.md # n8n webhooks
 │
 ├── memory/                     # Engram (memoria SQLite)
-│   └── engram.db               # 7 hitos guardados
+│   └── engram.db               # 12 hitos guardados
 │
 ├── engram-save.ps1             # Script helper para automatización
 │
@@ -139,6 +143,8 @@ PROPINANDO/
 │       └── ci.yml              # GitHub Actions CI/CD
 │
 ├── AGENTS.md                   # Configuración Tony Stark
+├── AGENTS-ORCHESTRATOR.md      # Protocolo de orquestación
+└── PROJECT.md                  # Este archivo
 └── PROJECT.md                  # Este archivo
 ```
 
@@ -230,16 +236,36 @@ N = P - C
 ### Orquestación
 
 ```
-┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
-│  ARCHITECT  │───>│    HUMAN    │───>│  ENGINEER   │───>│  GUARDIAN   │
-│   (Spec)    │    │   (HITL)    │    │   (Code)    │    │   (Audit)   │
-└─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘
-                                                                   │
-                                                                   ▼
-                                                            ┌─────────────┐
-                                                            │   ENGRAM    │
-                                                            │  (Memory)   │
-                                                            └─────────────┘
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              ORQUESTADOR (opencode)                            │
+│  - Coordina flujo SDD                                                         │
+│  - Delega tareas a sub-agentes                                               │
+│  - Valida consistencia cruzada                                               │
+│  - HITL al usuario                                                           │
+│  - Actualiza PROJECT.md                                                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+                    │                           │
+          ┌─────────┴─────────┐         ┌────────┴────────┐
+          ▼                   ▼         ▼                  ▼
+    ┌──────────┐        ┌──────────┐ ┌──────────┐   ┌──────────┐
+    │ SUB-AGENT│        │ SUB-AGENT│ │ SUB-AGENT│   │ SUB-AGENT│
+    │ Backend  │        │ Frontend │ │  Tests   │   │  Explore │
+    │Specialist│        │ Expert   │ │  Shield  │   │          │
+    └────┬─────┘        └────┬─────┘ └────┬─────┘   └──────────┘
+         │                   │            │
+         ▼                   ▼            ▼
+    Engram:            Engram:       Engram:
+    [Output A]         [Output B]    [Output C]
+         │                   │            │
+         └───────────────────┼────────────┘
+                             ▼
+                    Validar consistencia
+                             │
+                             ▼
+                         HITL (Usuario)
+                             │
+                             ▼
+                  npm run engram + PROJECT.md
 ```
 
 ### Protocolos
@@ -250,6 +276,8 @@ N = P - C
 | **SDD** | Spec-Driven Development |
 | **Guardian** | Code review (Zero-Any Policy, tests obligatorios) |
 | **Engram** | Persistencia de hitos en SQLite |
+| **PROJECT.md** | Actualización obligatoria tras completar subtareas |
+| **Confirm Git** | Confirmación explícita antes de git push |
 
 ---
 

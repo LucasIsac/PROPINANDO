@@ -14,6 +14,7 @@ El Orquestador coordina el flujo de trabajo SDD (Spec-Driven Development) delega
 - **Gestión de fallos**: Aplicar retry, timeout o escalar a HITL según corresponda.
 - **HITL final**: Presentar el trabajo ensamblado al usuario para aprobación explícita.
 - **Persistencia**: Ejecutar `npm run engram` tras cada hito aprobado.
+- **Actualizar PROJECT.md**: Reflejar estado de SPECs completadas, archivos creados y hitos.
 
 ## 2. Flujo de Orquestación
 

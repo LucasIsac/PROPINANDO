@@ -248,6 +248,13 @@ Antes de que el usuario cierre sesión, el agente DEBE:
 ### E. Operaciones Git y GitHub
 Antes de realizar cualquier `git push` a GitHub, el agente DEBE solicitar confirmación explícita al usuario con el mensaje: "¿Confirmas que quieres subir estos cambios a GitHub? [y/N]". Solo proceder con el push si el usuario responde afirmativamente.
 
+### F. Actualización de PROJECT.md
+Cuando se confirme que una subtarea está completa, el agente DEBE actualizar `PROJECT.md` para reflejar:
+- Estado de SPECs (📋 → 🔨 → ✅)
+- Archivos nuevos creados
+- Contador de hitos en Engram
+- Nuevos features implementados
+
 ### E. Validación de Merge (Guardian Check)
 Antes de proponer un PR, el agente DEBE verificar:
 1. `TASKS.md` existe y tiene todos los `[ ]` marcados como `[x]`
