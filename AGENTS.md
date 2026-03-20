@@ -17,26 +17,47 @@
 - **Identidad Visual:** Carmesí #DC143C.
 - **Metodología:** SDD (Spec-Driven Development) estricto.
 
-## 2. Stack Tecnológico
-- **Frontend:** Next.js 14+ (App Router), Tailwind CSS, Lucide React
+## 2. Estructura del Proyecto
+
+```
+PROPINANDO/
+├── apps/
+│   ├── api/           # Backend Express.js + Prisma
+│   │   ├── prisma/    # Schema y migraciones
+│   │   ├── src/       # Servicios, controllers, routes
+│   │   ├── AGENTS.md  # Config Backend
+│   │   └── vitest.config.ts
+│   └── web/           # Frontend Next.js
+│       ├── src/       # App Router, components
+│       └── AGENTS.md  # Config Frontend
+├── shared/            # Zod contracts, types
+├── docs/              # Documentación técnica
+│   └── specs/         # Especificaciones SDD
+├── skills/            # Skills custom del proyecto
+├── .agents/skills/    # Skills automáticos
+└── memory/            # Engram (memoria)
+```
+
+## 3. Stack Tecnológico
+- **Frontend:** Next.js 16+ (App Router), Tailwind CSS, Lucide React
 - **Backend:** Node.js, Express.js (Arquitectura por Capas)
 - **Base de Datos:** PostgreSQL
-- **ORM:** Prisma o Drizzle (priorizar tipado estricto)
+- **ORM:** Prisma (tipado estricto)
 - **Pagos:** Mercado Pago SDK (Argentina)
 - **Automatización:** n8n para notificaciones y reportes externos
 
-## 3. Reglas de Ingeniería
+## 4. Reglas de Ingeniería
 - **Single Responsibility (S):** Controladores manejan solicitud; Servicios manejan lógica de negocio; Repositorios manejan acceso a PostgreSQL
 - **Cálculo de Propinas:** La lógica P = N + C debe estar centralizada en un `PricingService` (8% comisión)
 - **Naming:** Código en inglés, semántico y descriptivo
 - **Tipado:** TypeScript estricto, **NO usar `any`** (Zero-Any Policy)
 
-## 4. Lógica de Negocio
+## 5. Lógica de Negocio
 - **Estados:** `INICIADO` -> `PAGADO` | `CANCELADO` | `FALLIDO`
 - **Transaccionalidad SQL:** Operaciones de saldo dentro de transacciones
 - **Seguridad:** Validar firmas HMAC en Webhooks de Mercado Pago
 
-## 5. RBAC
+## 6. RBAC
 - **SYSTEM_OWNER:** Acceso total, comisiones globales (C), gestión de venues
 - **STORE_ADMIN:** Gestión de empleados, montos brutos (P), gestión de venue
 - **EMPLOYEE:** Propinas netas (N), gestión de Alias/CBU

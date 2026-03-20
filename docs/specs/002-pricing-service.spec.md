@@ -64,8 +64,8 @@ Para que la implementación se considere exitosa, debe pasar estos tests:
 
 ## 5. Definición de Hecho (DoD)
 
-- [x] Archivo `backend/src/services/pricing.service.ts` creado
-- [x] Suite de tests `backend/src/services/__tests__/pricing.service.test.ts` con cobertura del 100%
+- [x] Archivo `apps/api/src/services/pricing.service.ts` creado
+- [x] Suite de tests `apps/api/src/services/__tests__/pricing.service.test.ts` con cobertura del 100%
 - [x] Uso de Branded Types para todos los montos devueltos
 
 ---
@@ -108,9 +108,9 @@ const net = netCents / 100;
 
 | Archivo | Descripción |
 |---------|-------------|
-| `backend/src/services/pricing.service.ts` | PricingService con lógica P = N + C |
-| `backend/src/services/__tests__/pricing.service.test.ts` | Suite de tests Vitest |
-| `backend/vitest.config.ts` | Configuración de Vitest |
+| `apps/api/src/services/pricing.service.ts` | PricingService con lógica P = N + C |
+| `apps/api/src/services/__tests__/pricing.service.test.ts` | Suite de tests Vitest |
+| `apps/api/vitest.config.ts` | Configuración de Vitest |
 | `shared/contracts/transaction.schema.ts` | Zod schemas con Branded Types |
 
 ---
