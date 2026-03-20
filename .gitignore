@@ -12,3 +12,7 @@ coverage/
 .idea/
 *.swp
 *.swo
+
+# Engram (local memory)
+engram-save.ps1
+memory/engram.db
