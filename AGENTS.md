@@ -245,6 +245,9 @@ Antes de que el usuario cierre sesión, el agente DEBE:
 - Ninguna funcionalidad se considera "Done" si solo está el Front o solo el Back.
 - El agente bloqueará la propuesta de Merge a `main` si el archivo `TASKS.md` no tiene todos los checks completados.
 
+### E. Operaciones Git y GitHub
+Antes de realizar cualquier `git push` a GitHub, el agente DEBE solicitar confirmación explícita al usuario con el mensaje: "¿Confirmas que quieres subir estos cambios a GitHub? [y/N]". Solo proceder con el push si el usuario responde afirmativamente.
+
 ### E. Validación de Merge (Guardian Check)
 Antes de proponer un PR, el agente DEBE verificar:
 1. `TASKS.md` existe y tiene todos los `[ ]` marcados como `[x]`
