@@ -14,16 +14,21 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'pnpm'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
 
       - name: Install dependencies
         run: pnpm install
 
       - name: Lint
-        run: pnpm lint
+        run: pnpm --filter web lint
 
       - name: Security audit
         run: pnpm audit --prod
 
-      - name: Run tests with coverage
-        run: pnpm test -- --coverage
+      - name: Run tests
+        run: pnpm --filter api test --run --coverage
+
+      - name: Build
+        run: pnpm build
