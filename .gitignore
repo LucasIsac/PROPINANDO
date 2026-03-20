@@ -16,3 +16,6 @@ coverage/
 # Engram (local memory)
 engram-save.ps1
 memory/engram.db
+
+# Team collaboration (per-branch)
+TASKS.md

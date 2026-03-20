@@ -245,6 +245,12 @@ Antes de que el usuario cierre sesión, el agente DEBE:
 - Ninguna funcionalidad se considera "Done" si solo está el Front o solo el Back.
 - El agente bloqueará la propuesta de Merge a `main` si el archivo `TASKS.md` no tiene todos los checks completados.
 
+### E. Validación de Merge (Guardian Check)
+Antes de proponer un PR, el agente DEBE verificar:
+1. `TASKS.md` existe y tiene todos los `[ ]` marcados como `[x]`
+2. Si TASKS.md tiene checks pendientes → **BLOQUEAR PR**
+3. Al mergear exitosamente → eliminar TASKS.md de la rama
+
 ---
 
 ## 🛡️ Sub-Agente: Guardian Angel
