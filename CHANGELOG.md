@@ -1,5 +1,43 @@
 # Changelog - PROPINANDO
 
+> Sistema de propinas digitales con Mercado Pago para Argentina
+
+---
+
+## 19 de Marzo de 2026
+
+---
+
+### Piloto Automático de Memoria (Engram)
+
+| Cambio | Descripción |
+|--------|-------------|
+| `engram-save.ps1` | Script helper para guardar hitos |
+| `npm run engram` | Comando npm para automatización |
+| Integración AGENTS.md | Persistencia obligatoria en Workflow SDD |
+
+**Uso:**
+```bash
+npm run engram -- "Hito" "Mensaje"
+```
+
+**Flujo:**
+```
+Spec aprobada → Engineer → Guardian → npm run engram → Engram guarda
+```
+
+---
+
+### Reestructuración a `apps/` (Sprint 0)
+
+| Cambio | Descripción |
+|--------|-------------|
+| `backend/` → `apps/api/` | Backend Express.js refactorizado |
+| `frontend/` → `apps/web/` | Frontend Next.js refactorizado |
+| Eliminación de `apps/generated/` | Prisma Client ahora en `apps/api/src/generated/` |
+
+---
+
 ## 18 de Marzo de 2026
 
 ---
@@ -8,164 +46,236 @@
 
 | Cambio | Descripción |
 |--------|-------------|
-| Repositorio GitHub | Creado repositorio en https://github.com/LucasIsac/PROPINANDO |
-| AGENTS.md | Archivo de configuración del agente con skills y reglas de ingeniería |
-| .gitignore | Configuración para ignorar node_modules, .env, .next |
+| Repositorio GitHub | Creado en https://github.com/LucasIsac/PROPINANDO |
+| Stack | PERN (PostgreSQL, Express, React, Node.js) |
 
 ---
 
-### Documentación
+## Arquitectura del Proyecto
 
-| Archivo | Descripción |
-|---------|-------------|
-| `docs/tecnica.md` | Especificación técnica v1.0.0 con stack PERN |
-| `docs/database.md` | Estructura de base de datos PostgreSQL con 10 tablas |
-| `docs/AGENTS.md` | Documentación del sistema de agentes |
-| `docs/specs/001-database-schema.spec.md` | SPEC-001: Esquema de base de datos |
-| `docs/specs/002-pricing-service.spec.md` | SPEC-002: Servicio de pricing |
-
----
-
-### Skills del Proyecto (Custom)
-
-| Skill | Ubicación | Función |
-|-------|-----------|---------|
-| **Mercado Pago Guard** | `skills/mercado-pago-split.skill.md` | Validación HMAC-SHA256, lógica de comisión (8%), idempotencia, anti race condition |
-| **RBAC PropinanDO** | `skills/propinando-rbac.skill.md` | Middleware ownership.ts con visibilidad por rol, retorno 403 Forbidden |
-| **n8n Payloads** | `skills/propinando-n8n-payloads.skill.md` | Contratos de eventos para n8n (tip.paid, tip.failed), montos en centavos, ISO 8601 |
-
-### Skills Automáticos (.agents/skills)
-
-| Skill | Ubicación | Función |
-|-------|-----------|---------|
-| **Security Architect** | `.agents/skills/security-best-practices/` | Helmet, Rate Limit, HTTPS, CORS, XSS, SQL Injection, CSRF, JWT + Refresh Tokens |
-| **Prisma Expert** | `.agents/skills/prisma-database-setup/` | Schema Prisma v7, migraciones PostgreSQL, driver adapters, configuración multi-database |
-| **Zod Guardian** | `.agents/skills/zod/` | Branded Types, validación en frontera API, safeParse, exports Tipados |
-| **Layered Architect** | `.agents/skills/nodejs-backend-patterns/` | Controller → Service → Repository, Clean Architecture, manejo global de errores |
-| **n8n Workflow Expert** | `.agents/skills/n8n-workflow-patterns/` | Webhooks, HTTP API, database ops, AI agents, scheduled tasks |
-| **The Shield** | `.agents/skills/javascript-testing-patterns/` | Vitest, Jest, Testing Library, mocking, TDD/BDD workflows |
-| **TypeScript Magician** | `.agents/skills/typescript-magician/` | Zero-Any Policy, generic types, type guards, utility types |
-| **React Query Best Practices** | `.agents/skills/react-query-best-practices/` | Query Keys, cache management, Optimistic Updates, WebSocket integration |
-| **Motion Designer** | `.agents/skills/framer-motion/` | Animaciones 60fps, micro-interacciones, Shared Layout |
-| **Animation Designer** | `.agents/skills/animation-designer/` | Patrones UI (Skeletons, Counters), Framer Motion, CSS animations |
-
----
-
-### Backend
-
-| Archivo | Descripción |
-|---------|-------------|
-| `backend/.env.example` | Template de variables de entorno (Auth, Redis, AES-256, Mercado Pago, n8n) |
-| `backend/src/config/middlewares.ts` | Middlewares de seguridad (Helmet, CORS, Rate Limiter, Morgan) |
-
----
-
-### Base de Datos (Prisma)
-
-| Archivo | Descripción |
-|---------|-------------|
-| `backend/prisma/schema.prisma` | Schema para PostgreSQL con 11 modelos y 3 enums |
-
-**Modelos:**
-- `User` - Usuarios del sistema (roles: SYSTEM_OWNER, STORE_ADMIN, EMPLOYEE, CUSTOMER)
-- `Venue` - Establecimientos con slug único
-- `VenueAdmin` - Relación N:M admin-venue
-- `Sector` - Áreas (Mozo, Cocina, Barra)
-- `Employee` - Staff del local
-- `Tip` - Propinas (P=N+C)
-- `TipSplit` - Distribución entre empleados
-- `PropinandoConfig` - Configuración global
-- `RefreshToken` - Sesiones
-- `AuditLog` - Auditoría
-
-**Enums:**
-- `UserRole`
-- `SplitMode`
-- `TipStatus`
+```
+PROPINANDO/
+├── apps/
+│   ├── api/                    # Backend Express.js + Prisma
+│   │   ├── AGENTS.md           # Configuración Backend Specialist
+│   │   ├── .env                # Variables de entorno
+│   │   ├── vitest.config.ts    # Configuración Vitest
+│   │   ├── prisma/
+│   │   │   ├── schema.prisma   # 11 modelos, 3 enums
+│   │   │   └── migrations/     # Historial de migraciones
+│   │   └── src/
+│   │       ├── config/
+│   │       │   └── middlewares.ts  # Helmet, CORS, Rate Limit
+│   │       ├── generated/      # Prisma Client (tipado)
+│   │       └── services/
+│   │           ├── pricing.service.ts          # P = N + C (8%)
+│   │           └── __tests__/
+│   │               └── pricing.service.test.ts # 15 tests, 95.65% coverage
+│   │
+│   └── web/                    # Frontend Next.js 16+
+│       ├── AGENTS.md           # Configuración Frontend Architect
+│       ├── src/
+│       │   ├── app/
+│       │   │   ├── layout.tsx  # Root layout (Poppins)
+│       │   │   ├── page.tsx    # Redirect → /login
+│       │   │   └── login/
+│       │   │       └── page.tsx
+│       │   ├── components/
+│       │   │   └── LoginForm.tsx
+│       │   └── schemas/
+│       │       └── login.schema.ts
+│       └── public/
+│           └── Adumu.ttf        # Fuente Carmesí
+│
+├── shared/                     # Zod contracts (tipado compartido)
+│   └── contracts/
+│       └── transaction.schema.ts
+│
+├── docs/
+│   ├── tecnica.md              # Especificación técnica v1.0.0
+│   ├── database.md             # Documentación DB
+│   └── specs/                  # SDD Pipeline
+│       ├── 001-database-schema.spec.md      # ✅ IMPLEMENTED
+│       ├── 002-pricing-service.spec.md      # ✅ IMPLEMENTED
+│       └── 003-mercadopago-integration.spec.md # 📋 READY
+│
+├── skills/                     # Custom Business Skills
+│   ├── mercado-pago-split.skill.md    # HMAC, comisión 8%
+│   ├── propinando-rbac.skill.md        # RBAC middleware
+│   └── propinando-n8n-payloads.skill.md # n8n webhooks
+│
+├── memory/                     # Engram (memoria SQLite)
+│   └── engram.db               # 5 hitos guardados
+│
+├── engram-save.ps1             # Script helper para automatización
+│
+├── AGENTS.md                   # Configuración Tony Stark
+└── CHANGELOG.md                # Este archivo
+```
 
 ---
 
-### Shared Contracts (Zod)
+## Hitos Implementados
 
-| Archivo | Descripción |
-|---------|-------------|
-| `shared/contracts/transaction.schema.ts` | Zod schemas con Branded Types para montos monetarios |
-
-**Branded Types:**
-- `UUID` - Identificadores únicos
-- `Money` - Montos monetarios (2 decimales)
-- `MoneyInCents` - Montos en centavos (integer)
-- `Percentage` - Porcentajes
-- `Email`, `Slug` - Validaciones
-
-**Funciones:**
-- `toCents(pesos)` - Convierte pesos a centavos
-- `toPesos(cents)` - Convierte centavos a pesos
-- `calculateCommissionCents(grossAmountCents)` - Calcula comisión con Math.ceil
-- `calculateNetCents(grossAmountCents, commissionCents)` - Calcula neto
-- `validateTipFormula(grossAmount, commissionAmount, netAmount)` - Valida P=N+C
+| Hito | Estado | Descripción |
+|------|--------|-------------|
+| Hito 1 | ✅ IMPLEMENTED | Schema Prisma (11 modelos, 3 enums) |
+| Hito 2 | ✅ IMPLEMENTED | PricingService (P=N+C, 15 tests, 95.65% cobertura) |
+| Hito 3 | 📋 READY | Mercado Pago (Checkout + Webhooks + HMAC) |
 
 ---
 
-### PricingService (Hito 2)
+## Base de Datos (Prisma)
 
-| Archivo | Descripción |
-|---------|-------------|
-| `backend/src/services/pricing.service.ts` | Clase pura para cálculo de propinas |
-| `backend/src/services/__tests__/pricing.service.test.ts` | Suite de 15 tests Vitest |
-| `backend/vitest.config.ts` | Configuración de Vitest |
+### Modelos
 
-**Fórmula:**
+| Modelo | Descripción |
+|--------|-------------|
+| `User` | Usuarios (SYSTEM_OWNER, STORE_ADMIN, EMPLOYEE, CUSTOMER) |
+| `Venue` | Establecimientos con slug único |
+| `VenueAdmin` | Relación N:M admin-venue |
+| `Sector` | Áreas (Mozo, Cocina, Barra) |
+| `Employee` | Staff del local |
+| `Tip` | Propinas (P=N+C) |
+| `TipSplit` | Distribución entre empleados |
+| `PropinandoConfig` | Configuración global (comisión, etc.) |
+| `RefreshToken` | Sesiones |
+| `AuditLog` | Auditoría |
+
+### Enums
+
+| Enum | Valores |
+|------|---------|
+| `UserRole` | SYSTEM_OWNER, STORE_ADMIN, EMPLOYEE, CUSTOMER |
+| `SplitMode` | EQUAL, PROPORTIONAL, CUSTOM |
+| `TipStatus` | INICIADO, PAGADO, CANCELADO, FALLIDO |
+
+---
+
+## PricingService (Hito 2)
+
+### Fórmula
+
 ```
 P = N + C
 C = P × 0.08 (Math.ceil en centavos)
 N = P - C
 ```
 
-**Tests:**
-- Monto Exacto: $1000 → C=80, N=920 ✅
-- Monto con Decimales: $1250.50 → C=100.04, N=1150.46 ✅
-- Monto Mínimo: $1.00 → C=0.08, N=0.92 ✅
-- Validación de Error: Montos ≤ 0 ✅
+### Ejemplo
+
+| Input (P) | Comisión (C) | Neto (N) |
+|-----------|--------------|----------|
+| $1000.00 | $80.00 | $920.00 |
+| $1250.50 | $100.04 | $1150.46 |
+| $1.00 | $0.08 | $0.92 |
+
+### Tests
+
+- 15 tests unitarios en Vitest
+- 95.65% cobertura de código
+- Casos: montos exactos, decimales, mínimos, errores
 
 ---
 
-### Frontend
+## Shared Contracts (Zod)
 
-| Archivo | Descripción |
-|---------|-------------|
-| `frontend/` | Proyecto Next.js 16+ con App Router |
+| Branded Type | Descripción |
+|--------------|-------------|
+| `UUID` | Identificadores únicos |
+| `Money` | Montos monetarios (2 decimales) |
+| `MoneyInCents` | Montos en centavos (integer) |
+| `Percentage` | Porcentajes |
 
-**Estructura:**
-- `src/app/login/page.tsx` - Página de login con Poppins font
-- `src/app/layout.tsx` - Layout principal
-- `src/app/page.tsx` - Redirección a /login
-- `src/components/LoginForm.tsx` - Formulario con validación Zod
-- `src/schemas/login.schema.ts` - Schema de validación
-- `public/Adumu.ttf` - Fuente Adumu
+### Funciones
 
-**Features:**
-- Validación con Zod (email, password min 6 chars)
+- `toCents(pesos)` - Convierte pesos a centavos
+- `toPesos(cents)` - Convierte centavos a pesos
+- `calculateCommissionCents(grossAmountCents)` - Calcula comisión con Math.ceil
+- `validateTipFormula(grossAmount, commissionAmount, netAmount)` - Valida P=N+C
+
+---
+
+## Framework Tony Stark
+
+### Orquestación
+
+```
+┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
+│  ARCHITECT  │───>│    HUMAN    │───>│  ENGINEER   │───>│  GUARDIAN   │
+│   (Spec)    │    │   (HITL)    │    │   (Code)    │    │   (Audit)   │
+└─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘
+                                                                   │
+                                                                   ▼
+                                                            ┌─────────────┐
+                                                            │   ENGRAM    │
+                                                            │  (Memory)   │
+                                                            └─────────────┘
+```
+
+### Protocolos
+
+| Protocolo | Descripción |
+|-----------|-------------|
+| **HITL** | Aprobación de plan antes de código |
+| **SDD** | Spec-Driven Development |
+| **Guardian** | Code review (Zero-Any Policy, tests obligatorios) |
+| **Engram** | Persistencia de hitos en SQLite |
+
+---
+
+## Skills Registry
+
+### Custom Skills
+
+| Skill | Ubicación | Función |
+|-------|-----------|---------|
+| **Mercado Pago Guard** | `skills/mercado-pago-split.skill.md` | HMAC-SHA256, lógica 8%, idempotencia |
+| **RBAC PropinanDO** | `skills/propinando-rbac.skill.md` | Middleware ownership, 403 Forbidden |
+| **n8n Payloads** | `skills/propinando-n8n-payloads.skill.md` | tip.paid, tip.failed, centavos, ISO 8601 |
+
+### Automatic Skills
+
+| Skill | Función |
+|-------|---------|
+| **Security Architect** | Helmet, Rate Limit, JWT, HTTPS |
+| **Prisma Expert** | Schema v7, migraciones PostgreSQL |
+| **Zod Guardian** | Branded Types, safeParse |
+| **Layered Architect** | Controller → Service → Repository |
+| **The Shield** | Vitest, TDD/BDD |
+| **TypeScript Magician** | Zero-Any Policy |
+| **React Query Best Practices** | Cache, Optimistic Updates |
+| **Motion Designer** | 60fps animations |
+
+---
+
+## Frontend
+
+### Login Page
+
+- Validación Zod (email, password min 6 chars)
 - Color Carmesí #DC143C
 - Iconos Lucide React
-- Loading spinner durante submit
-- Conexión a `/api/auth/login`
+- Loading spinner
+- API: `POST /api/auth/login`
 
 ---
 
-### Memory (Engram)
+## Reglas del Proyecto
 
-| Archivo | Descripción |
-|---------|-------------|
-| `memory/engram.db` | Base de datos SQLite local para memoria del proyecto |
-
-**Hitos guardados:**
-1. Hito 1 Verificado
-2. Hito 2: Pricing Logic
+| Regla | Valor |
+|-------|-------|
+| Comisión | 8% fijo |
+| Fórmula | P = N + C |
+| Tipado | Zero-Any Policy (NO `any`) |
+| Color | #DC143C |
+| Workflow | SDD (Spec-Driven Development) |
+| Testing | Vitest obligatorio |
+| Redondeo | Math.ceil en centavos |
 
 ---
 
-## Resumen de Tecnologías
+## Tecnologías
 
 | Área | Tecnología |
 |------|------------|
@@ -180,11 +290,9 @@ N = P - C
 
 ---
 
-## Reglas del Proyecto
+## Próximos Pasos
 
-- **Comisión:** 8% fijo
-- **Fórmula:** P = N + C
-- **Tipado:** Zero-Any Policy (NO usar `any`)
-- **Color:** #DC143C (Carmesí)
-- **Workflow:** SDD (Spec-Driven Development)
-- **Testing:** Vitest para unit tests
+1. Implementar SPEC-003: Mercado Pago Integration
+2. Webhook handler con HMAC validation
+3. Checkout redirects
+4. Tests de integración

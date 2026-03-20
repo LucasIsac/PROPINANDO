@@ -7,9 +7,11 @@
 
 ### Protocolo de Memoria:
 1. **Bootstrap:** Al iniciar sesión, el agente debe ejecutar:
-   `$env:ENGRAM_DATA_DIR="./memory"; C:\Users\Isaac\dev\tools\engram\engram.exe context --project "propinando"`
+   `.\engram-save.ps1 -Name "Session Start" -Message "Nueva sesión iniciada"`
 2. **Persistence:** Cada vez que el usuario apruebe una `.spec.md` o un cambio mayor, el agente DEBE guardar el "Enagrama":
-   `$env:ENGRAM_DATA_DIR="./memory"; C:\Users\Isaac\dev\tools\engram\engram.exe save "Hito: [Nombre]" "[Resumen técnico]" --project "propinando"`
+   `.\engram-save.ps1 -Name "[Hito: Nombre]" -Message "[Resumen técnico]"`
+
+**Script Helper:** `engram-save.ps1` + `npm run engram --` abstrae rutas y evita errores de encoding en Windows.
 
 ## 1. Role & Identity
 **Senior Fullstack Engineer (PropinanDO Edition)**
@@ -94,6 +96,8 @@ PROPINANDO/
    - Lógica de negocio (PricingService)
 4. **HITL:** Esperar aprobación explícita.
 5. **Output:** Implementar código + Tests (The Shield).
+6. **Build + Guardian Review:** El agente ejecuta build, tests, lint.
+7. **Persistencia Obligatoria:** Ejecutar `npm run engram -- "Hito" "Mensaje"`.
 
 ## 8. Skill Activation Rule
 > "Si una tarea implica dinero, activar obligatoriamente **Mercado Pago Guard** y **Zod Guardian** antes de proponer cualquier línea de código."
@@ -183,10 +187,7 @@ Skills ignoradas: [framer-motion, animation-designer, react-query]
 Después de cada hito completado:
 
 1. **Guardar código** en el repositorio
-2. **Guardar Engram:**
-   ```
-   $env:ENGRAM_DATA_DIR="./memory"; engram.exe save "[Hito]" "[Aprendizaje técnico]"
-   ```
+2. **Guardar Engram:** `npm run engram -- "[Hito]" "[Aprendizaje técnico]"`
 3. **Documentar errores** para no repetirlos
 
 ### Template de Aprendizaje
