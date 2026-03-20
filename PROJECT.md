@@ -1,6 +1,28 @@
-# Changelog - PROPINANDO
+# PROPINANDO - Documentación del Proyecto
 
 > Sistema de propinas digitales con Mercado Pago para Argentina
+
+---
+
+## Índice de Documentación
+
+| Archivo | Descripción |
+|---------|-------------|
+| `PROJECT.md` | Este archivo - Documentación general del proyecto |
+| `README.md` | Instrucciones de uso del sistema (root) |
+| `AGENTS.md` | Configuración del framework Tony Stark |
+| `docs/tecnica.md` | Especificación técnica v1.0.0 |
+| `docs/database.md` | Documentación de la base de datos |
+| `docs/ENGRAM.md` | Guía de automatización de memoria Engram |
+| `docs/specs/001-database-schema.spec.md` | SPEC-001: Schema de BD ✅ |
+| `docs/specs/002-pricing-service.spec.md` | SPEC-002: PricingService ✅ |
+| `docs/specs/003-mercadopago-integration.spec.md` | SPEC-003: Mercado Pago 📋 |
+| `apps/api/AGENTS.md` | Configuración Backend Specialist |
+| `apps/web/AGENTS.md` | Configuración Frontend Architect |
+| `apps/web/README.md` | Documentación del frontend Next.js |
+| `skills/mercado-pago-split.skill.md` | Skill: HMAC + comisión 8% |
+| `skills/propinando-rbac.skill.md` | Skill: RBAC middleware |
+| `skills/propinando-n8n-payloads.skill.md` | Skill: n8n webhooks |
 
 ---
 
@@ -14,7 +36,7 @@
 |--------|-------------|
 | `engram-save.ps1` | Script helper para guardar hitos |
 | `npm run engram` | Comando npm para automatización |
-| Integración AGENTS.md | Persistencia obligatoria en Workflow SDD |
+| `docs/ENGRAM.md` | Guía completa de configuración |
 
 **Uso:**
 ```bash
@@ -74,6 +96,7 @@ PROPINANDO/
 │   │
 │   └── web/                    # Frontend Next.js 16+
 │       ├── AGENTS.md           # Configuración Frontend Architect
+│       ├── README.md           # Documentación del frontend
 │       ├── src/
 │       │   ├── app/
 │       │   │   ├── layout.tsx  # Root layout (Poppins)
@@ -94,6 +117,7 @@ PROPINANDO/
 ├── docs/
 │   ├── tecnica.md              # Especificación técnica v1.0.0
 │   ├── database.md             # Documentación DB
+│   ├── ENGRAM.md               # Guía de automatización Engram
 │   └── specs/                  # SDD Pipeline
 │       ├── 001-database-schema.spec.md      # ✅ IMPLEMENTED
 │       ├── 002-pricing-service.spec.md      # ✅ IMPLEMENTED
@@ -105,12 +129,12 @@ PROPINANDO/
 │   └── propinando-n8n-payloads.skill.md # n8n webhooks
 │
 ├── memory/                     # Engram (memoria SQLite)
-│   └── engram.db               # 5 hitos guardados
+│   └── engram.db               # 6 hitos guardados
 │
 ├── engram-save.ps1             # Script helper para automatización
 │
 ├── AGENTS.md                   # Configuración Tony Stark
-└── CHANGELOG.md                # Este archivo
+└── PROJECT.md                  # Este archivo
 ```
 
 ---
