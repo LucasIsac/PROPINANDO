@@ -20,6 +20,7 @@
 | `apps/api/AGENTS.md` | Configuración Backend Specialist |
 | `apps/web/AGENTS.md` | Configuración Frontend Architect |
 | `apps/web/README.md` | Documentación del frontend Next.js |
+| `.github/workflows/ci.yml` | GitHub Actions CI/CD pipeline |
 | `skills/mercado-pago-split.skill.md` | Skill: HMAC + comisión 8% |
 | `skills/propinando-rbac.skill.md` | Skill: RBAC middleware |
 | `skills/propinando-n8n-payloads.skill.md` | Skill: n8n webhooks |
@@ -129,9 +130,13 @@ PROPINANDO/
 │   └── propinando-n8n-payloads.skill.md # n8n webhooks
 │
 ├── memory/                     # Engram (memoria SQLite)
-│   └── engram.db               # 6 hitos guardados
+│   └── engram.db               # 7 hitos guardados
 │
 ├── engram-save.ps1             # Script helper para automatización
+│
+├── .github/
+│   └── workflows/
+│       └── ci.yml              # GitHub Actions CI/CD
 │
 ├── AGENTS.md                   # Configuración Tony Stark
 └── PROJECT.md                  # Este archivo
@@ -299,6 +304,29 @@ N = P - C
 
 ---
 
+## GitHub Actions CI/CD
+
+### Pipeline
+
+```yaml
+Trigger: PR → main
+Node: 20 LTS
+Cache: pnpm
+
+Steps:
+1. pnpm install
+2. pnpm lint
+3. pnpm audit --prod
+4. pnpm test -- --coverage
+```
+
+### Cobertura
+
+- Provider: v8
+- Reporters: text, json, html, lcov
+
+---
+
 ## Tecnologías
 
 | Área | Tecnología |
@@ -308,6 +336,7 @@ N = P - C
 | DB | PostgreSQL, Prisma ORM |
 | Pagos | Mercado Pago SDK |
 | Testing | Vitest |
+| CI/CD | GitHub Actions |
 | Automatización | n8n |
 | Tipado | TypeScript, Zod |
 | Memoria | Engram |
