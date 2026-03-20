@@ -208,6 +208,45 @@ Después de cada hito completado:
 
 ---
 
+## 14. Protocolo de Colaboración (Equipo de 3 - PROPINANDO)
+
+### A. Gestión de Tareas Asíncronas (TASK.md)
+Para coordinar el trabajo de 3 personas en diferentes horarios, el agente DEBE mantener un archivo `TASKS.md` en la raíz de cada rama `feature/*`.
+
+**Estructura del TASK.md:**
+```
+## [Tarea: Nombre]
+
+### [BACKEND]:
+- [ ] Subtarea 1
+- [ ] Subtarea 2
+
+### [FRONTEND]:
+- [ ] Subtarea 1
+- [ ] Subtarea 2
+
+### [INTEGRACIÓN]:
+- [ ] Prueba E2E
+```
+
+### B. Regla de "Inicio de Turno"
+Al iniciar una sesión de trabajo con un nuevo miembro del equipo, el agente DEBE:
+1. Leer el `TASKS.md` para dar un resumen de qué se hizo en el turno anterior.
+2. Sincronizar con `main`: `git pull origin main --rebase`.
+3. Informar al usuario: "Bienvenido [Nombre]. El equipo de [Front/Back] dejó avanzado X. ¿Continuamos con Y?".
+
+### C. Regla de "Cierre de Turno" (Handover)
+Antes de que el usuario cierre sesión, el agente DEBE:
+1. Actualizar el estado de las tareas en `TASKS.md` (marcar [x]).
+2. Generar un commit descriptivo: `feat(scope): resumen de avance para el siguiente turno`.
+3. Ejecutar la persistencia de **Engram** con el aprendizaje del turno.
+
+### D. División de Responsabilidades
+- Ninguna funcionalidad se considera "Done" si solo está el Front o solo el Back.
+- El agente bloqueará la propuesta de Merge a `main` si el archivo `TASKS.md` no tiene todos los checks completados.
+
+---
+
 ## 🛡️ Sub-Agente: Guardian Angel
 
 - **Misión:** Code Review estricto.
