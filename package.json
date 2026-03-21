@@ -5,7 +5,10 @@
     "dev": "pnpm --filter web dev",
     "dev:api": "pnpm --filter api dev",
     "build": "pnpm --filter web build && pnpm --filter api build",
-    "lint": "pnpm --filter web lint",
+    "lint": "pnpm -r lint",
+    "audit": "pnpm audit --prod --audit-level=critical",
+    "test": "pnpm -r test --run",
+    "test:coverage": "pnpm -r test --run --coverage",
     "engram": "powershell -ExecutionPolicy Bypass -File engram-save.ps1"
   },
   "devDependencies": {

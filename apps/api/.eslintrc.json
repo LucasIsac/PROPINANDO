@@ -1,0 +1,57 @@
+{
+  "env": {
+    "node": true,
+    "es2022": true
+  },
+  "extends": [
+    "airbnb-base",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "@typescript-eslint",
+    "import"
+  ],
+  "ignorePatterns": [
+    "src/generated/**/*",
+    "node_modules/**/*",
+    "dist/**/*"
+  ],
+  "rules": {
+    "import/extensions": "off",
+    "import/no-unresolved": "off",
+    "import/prefer-default-export": "off",
+    "import/order": "off",
+    "object-curly-newline": "off",
+    "no-console": "warn",
+    "no-restricted-syntax": "off",
+    "no-await-in-loop": "off",
+    "no-plusplus": "off",
+    "consistent-return": "off",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-unused-vars": "warn",
+    "@typescript-eslint/no-require-imports": "off",
+    "@typescript-eslint/no-shadow": "off",
+    "no-trailing-spaces": "off",
+    "no-multiple-empty-lines": "off",
+    "radix": "off",
+    "quotes": "off",
+    "comma-dangle": "off",
+    "semi": "off",
+    "linebreak-style": "off",
+    "padded-blocks": "off",
+    "no-shadow": "off"
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".ts"]
+      }
+    }
+  }
+}

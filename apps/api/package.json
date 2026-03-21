@@ -9,39 +9,46 @@
     "db:migrate": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio",
-    "test": "vitest"
+    "test": "vitest",
+    "lint": "eslint . --ext .ts",
+    "audit": "pnpm audit --prod --audit-level=critical"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@otplib/preset-default": "^12",
     "@prisma/client": "^6",
-    "bcryptjs": "^2.4.3",
-    "express": "^4.21",
-    "jsonwebtoken": "^9",
-    "zod": "^3",
-    "helmet": "^8",
-    "cors": "^2",
-    "express-rate-limit": "^7.0.0",
-    "cookie-parser": "^1",
-    "morgan": "^1",
-    "dotenv": "^16",
-    "mercadopago": "^2",
     "axios": "^1",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1",
+    "cors": "^2",
+    "dotenv": "^16",
+    "express": "^4.21",
+    "express-rate-limit": "^7.0.0",
+    "helmet": "^8",
+    "jsonwebtoken": "^9",
+    "mercadopago": "^2",
+    "morgan": "^1",
     "uuid": "^11",
-    "@otplib/preset-default": "^12"
+    "zod": "^3"
   },
   "devDependencies": {
-    "@types/express": "^5",
     "@types/bcryptjs": "^2",
-    "@types/jsonwebtoken": "^9",
     "@types/cookie-parser": "^1",
-    "@types/morgan": "^1",
     "@types/cors": "^2",
+    "@types/express": "^5",
+    "@types/jsonwebtoken": "^9",
+    "@types/morgan": "^1",
     "@types/uuid": "^10",
+    "@typescript-eslint/eslint-plugin": "^8",
+    "@typescript-eslint/parser": "^8",
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb-base": "^15",
+    "eslint-plugin-import": "^2",
     "prisma": "^6",
     "tsx": "^4",
-    "vitest": "^3",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3"
   }
 }
