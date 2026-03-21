@@ -233,40 +233,41 @@ N = P - C
 
 ## Framework Tony Stark
 
-### Orquestación
+### Orquestación con Sub-Agentes
+
+El proyecto utiliza un **Orquestador** (este agente) que coordina **Sub-Agentes** especializados para maximizar eficiencia y minimizar uso de contexto.
+
+**Ver documentación completa:** `AGENTS-ORCHESTRATOR.md`
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                              ORQUESTADOR (opencode)                            │
-│  - Coordina flujo SDD                                                         │
-│  - Delega tareas a sub-agentes                                               │
-│  - Valida consistencia cruzada                                               │
-│  - HITL al usuario                                                           │
-│  - Actualiza PROJECT.md                                                       │
-└─────────────────────────────────────────────────────────────────────────────┘
-                    │                           │
-          ┌─────────┴─────────┐         ┌────────┴────────┐
-          ▼                   ▼         ▼                  ▼
-    ┌──────────┐        ┌──────────┐ ┌──────────┐   ┌──────────┐
-    │ SUB-AGENT│        │ SUB-AGENT│ │ SUB-AGENT│   │ SUB-AGENT│
-    │ Backend  │        │ Frontend │ │  Tests   │   │  Explore │
-    │Specialist│        │ Expert   │ │  Shield  │   │          │
-    └────┬─────┘        └────┬─────┘ └────┬─────┘   └──────────┘
-         │                   │            │
-         ▼                   ▼            ▼
-    Engram:            Engram:       Engram:
-    [Output A]         [Output B]    [Output C]
-         │                   │            │
-         └───────────────────┼────────────┘
-                             ▼
-                    Validar consistencia
-                             │
-                             ▼
-                         HITL (Usuario)
-                             │
-                             ▼
-                  npm run engram + PROJECT.md
+┌─────────────────────┐
+│    ORQUESTADOR      │  ← Este agente (opencode)
+│  (Coordinación SDD) │
+└─────────┬───────────┘
+          │
+    ┌─────┴─────┐
+    ▼           ▼
+Sub-Agente   Sub-Agente   → Delegar tareas simultáneas
+Backend      Frontend        ↓
+    │           │        Engram (memoria compartida)
+    └─────┬─────┘
+          ▼
+    Validar consistencia
+          │
+          ▼
+        HITL (Usuario)
+          │
+          ▼
+    npm run engram
 ```
+
+### Responsabilidades del Orquestador
+
+1. **Delegar** tareas a Sub-Agentes especializados
+2. **Validar** consistencia cruzada de outputs
+3. **Recopilar** resultados en Engram
+4. **Presentar** HITL al usuario
+5. **Persistir** hitos + actualizar PROJECT.md
 
 ### Protocolos
 
@@ -274,9 +275,9 @@ N = P - C
 |-----------|-------------|
 | **HITL** | Aprobación de plan antes de código |
 | **SDD** | Spec-Driven Development |
-| **Guardian** | Code review (Zero-Any Policy, tests obligatorios) |
+| **Guardian** | Code review (Zero-Any Policy, tests) |
 | **Engram** | Persistencia de hitos en SQLite |
-| **PROJECT.md** | Actualización obligatoria tras completar subtareas |
+| **PROJECT.md** | Actualización obligatoria tras completar |
 | **Confirm Git** | Confirmación explícita antes de git push |
 
 ---
