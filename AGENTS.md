@@ -275,4 +275,85 @@ Antes de proponer un PR, el agente DEBE verificar:
 
 ---
 
+## 15. Quality Gatekeeping
+
+> Ninguna funcionalidad se considera **"Done"** si no pasa los criterios de calidad. El sub-agente Guardian DEBE validar estos checks **antes de cada `npm run engram`** y **antes de permitir merge a `main`**.
+
+### 💎 Criterios de Calidad - MVP PropinanDO
+
+#### 1. 🔒 Seguridad y Privacidad (CRÍTICO)
+
+| # | Criterio | Validación |
+|---|----------|------------|
+| 1.1 | **Cifrado AES-256** - Datos bancarios (CBU/CVU/Alias) cifrados en reposo | Verificar que se usa cifrado en schema Prisma o servicio |
+| 1.2 | **bcrypt ≥12** - Factor de costo obligatorio para passwords | Verificar `bcrypt.hash(password, 12)` en auth service |
+| 1.3 | **HMAC SHA256** - Validación obligatoria en webhooks de Mercado Pago | Verificar middleware de firma en webhook controller |
+| 1.4 | **RBAC** - Admin no ve neto individual, solo totales agregados | Verificar que endpoint `/tips/aggregate` no expone `netAmount` por employee |
+
+#### 2. ⚡ Rendimiento y Disponibilidad
+
+| # | Criterio | Target |
+|---|----------|--------|
+| 2.1 | **Velocidad de carga** - QR → Pago | < 3s en 4G |
+| 2.2 | **Latencia SSE** - Dashboard tiempo real | < 2s |
+| 2.3 | **Uptime** | 99.5% mensual |
+| 2.4 | **Capacidad** - Sesiones simultáneas | ≥ 1000 clientes |
+
+> **Nota:** Estos se validan en staging/producción. En desarrollo, asegurar que no hay N+1 queries.
+
+#### 3. ♿ Usabilidad y Accesibilidad
+
+| # | Criterio | Validación |
+|---|----------|------------|
+| 3.1 | **Regla de 4 Pasos** - Cliente completa en ≤4 pantallas | Verificar flujo en routing |
+| 3.2 | **Contraste WCAG 2.1 AA** - Ratio ≥ 4.5:1 con Carmesí #DC143C | Usar `#DC143C` solo en fondos oscuros o texto claro |
+| 3.3 | **Responsive** - Funciona desde 320px | Usar Tailwind breakpoints (`sm:`, `md:`, `lg:`) |
+
+#### 4. 🧪 Estándares de Código y Testing
+
+| # | Criterio | Target |
+|---|----------|--------|
+| 4.1 | **Zero-Any Policy** | 0 occurrences de `any` en código |
+| 4.2 | **Cobertura tests** | ≥ 70% en backend (Vitest) |
+| 4.3 | **Consistencia visual** | Poppins (general), Adumu (logos/acentos) |
+
+### Checklist de Validación (Guardian)
+
+Antes de `npm run engram` o Merge a `main`:
+
+```markdown
+## ✅ Quality Gatekeeping Checklist
+
+### Seguridad
+- [ ] Datos bancarios cifrados (AES-256 o equivalente)
+- [ ] bcrypt con cost factor ≥ 12
+- [ ] Webhook HMAC validation implementada
+- [ ] RBAC: Admin no ve neto individual
+
+### Testing
+- [ ] Tests unitarios pasan: `pnpm test`
+- [ ] Cobertura ≥ 70%: `pnpm test:coverage`
+- [ ] Zero `any` en código: `pnpm lint`
+
+### Accesibilidad
+- [ ] Contraste WCAG 2.1 AA verificado
+- [ ] Responsive desde 320px
+- [ ] Flujo ≤ 4 pantallas
+
+### CI/CD
+- [ ] `pnpm lint` pasa (0 errors)
+- [ ] `pnpm audit` pasa (0 critical vulnerabilities)
+- [ ] GitHub Actions CI verde
+```
+
+### Regla de Bloqueo
+
+> **SI cualquier criterio CRÍTICO (1.x) falla → BLOQUEAR merge y solicitar corrección.**
+> 
+> **SI cualquier criterio de testing (4.x) falla → BLOQUEAR merge hasta resolver.**
+
+---
+
+---
+
 **Queda prohibido implementar código sin una aprobación previa del plan de acción por parte del usuario (HITL).**
