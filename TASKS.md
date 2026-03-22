@@ -1,0 +1,133 @@
+# TASKS - feature/identity-role-transition
+
+> Etapa 1 del Roadmap MVP: Gestión de Identidad y Transición de Roles
+> Refs: RF-E01, RF-E02, RF-E03, RF-E04, RF-E08, RFA01 (parcial), RNF-06, RNF-08
+
+---
+
+## [Tarea 1.1: Registro de Empleado Individual]
+
+### [BACKEND]:
+- [ ] Endpoint `POST /auth/register` con validación Zod (nombre, apellido, DNI, teléfono, CBU/CVU, foto)
+- [ ] Hasheo de contraseña con Bcrypt (factor 12)
+- [ ] Cifrado AES-256 de datos sensibles (CBU/CVU, DNI) antes de persistir
+- [ ] Estado inicial del empleado: `PENDIENTE` (no disponible como destino de pago)
+- [ ] Endpoint `GET /employee/me` con enmascaramiento de CBU en respuesta (`2100****4567`) — nunca el valor completo
+- [ ] Middleware `ownership.ts`: validar que el recurso pertenece al usuario del token en cada query
+
+### [FRONTEND]:
+- [ ] Pantalla de registro (`/app/register`) con campos: nombre, apellido, DNI, teléfono, CBU/CVU, foto de perfil
+- [ ] Validación de formulario en cliente con Zod (mismo contrato que backend)
+- [ ] Feedback visual de estado `PENDIENTE` post-registro ("Tu cuenta está en revisión")
+- [ ] Selector de categoría/sector al registrarse (Mozo, Cocina, Barra, Delivery, etc.)
+
+### [INTEGRACIÓN]:
+- [ ] E2E: registro completo → verificar estado `PENDIENTE` en DB → verificar CBU cifrado en DB → verificar respuesta enmascarada del endpoint
+
+---
+
+## [Tarea 1.2: Verificación de Identidad (MVP manual)]
+
+### [BACKEND]:
+- [ ] Campo `identity_verified` (Boolean, DEFAULT FALSE) ya contemplado en esquema `users`
+- [ ] Endpoint `PATCH /admin/employees/:id/verify` restringido a `STORE_ADMIN` y `SYSTEM_OWNER`
+- [ ] Al verificar: cambiar estado a `ACTIVO`, habilitar el empleado como destino de pago
+- [ ] Registro en `audit_log` de cada acción de verificación (user_id, ip, timestamp, entity)
+- [ ] Middleware RBAC en el endpoint de verificación
+
+### [FRONTEND]:
+- [ ] Vista en panel Admin (`/app/admin/employees`) con listado de empleados `PENDIENTE`
+- [ ] Botón "Verificar identidad" con confirmación modal
+- [ ] Badge de estado visible: `PENDIENTE` / `ACTIVO` / `INACTIVO`
+
+### [INTEGRACIÓN]:
+- [ ] E2E: admin verifica empleado → estado cambia a `ACTIVO` → empleado aparece disponible en flujo de cliente → audit_log registra la acción
+
+---
+
+## [Tarea 1.3: Login y Gestión de Sesión (BFF + Doble Token)]
+
+### [BACKEND]:
+- [ ] Endpoint `POST /auth/login` → genera Access Token (15 min) + Refresh Token (7 días)
+- [ ] Access Token en cookie `HttpOnly`, `Secure`, `SameSite=Strict` (NO en localStorage)
+- [ ] Refresh Token almacenado en tabla `refresh_tokens` (hash, expires_at, revoked)
+- [ ] Endpoint `POST /auth/refresh` para renovar Access Token usando Refresh Token válido
+- [ ] Endpoint `POST /auth/logout` → marcar Refresh Token como `revoked=true` en DB (blacklist)
+- [ ] Rate limiting: bloqueo temporal tras 5 intentos fallidos de login (RNF-11)
+- [ ] Endpoint de reset de contraseña: JWT firmado (15 min), un solo uso, invalidado en Redis post-consumo
+
+### [FRONTEND]:
+- [ ] Pantalla de login (`/app/login`) con email y contraseña
+- [ ] Manejo silencioso del refresh de token (interceptor de requests)
+- [ ] Redirección automática post-login según rol (`/app/dashboard` para empleado, `/app/admin` para admin)
+- [ ] Pantalla de "Olvidé mi contraseña" con flujo de email
+
+### [INTEGRACIÓN]:
+- [ ] E2E: login → verificar cookie HttpOnly presente → Access Token expira → refresh automático → logout → refresh token invalidado
+
+---
+
+## [Tarea 1.4: Dashboard de Ganancias Individual (Tiempo Real)]
+
+### [BACKEND]:
+- [ ] Endpoint SSE `GET /employee/tips/stream` para actualización en tiempo real (latencia < 2s, RNF-02)
+- [ ] Endpoint `GET /employee/tips/summary` → total del día, total del mes, neto estimado
+- [ ] Endpoint `GET /employee/tips` → listado paginado de propinas con detalle (fecha, monto neto, estrellas, comentario)
+- [ ] Todos los endpoints con middleware `ownership.ts`: `WHERE employee_id = :tokenUserId`
+- [ ] Respuesta nunca expone comisión bruta ni monto de Propinando (RNF-10)
+
+### [FRONTEND]:
+- [ ] Dashboard del empleado (`/app/dashboard`) con: total del día, total del mes, neto estimado
+- [ ] Feed en tiempo real de últimas propinas (SSE)
+- [ ] Tarjeta de detalle por propina: fecha/hora, monto neto, estrellas, comentario (si existe)
+- [ ] Skeleton loaders durante carga inicial
+
+### [INTEGRACIÓN]:
+- [ ] E2E: empleado logueado recibe propina de prueba → SSE actualiza dashboard en < 2s → detalle muestra monto neto (nunca bruto)
+
+---
+
+## [Tarea 1.5: Módulo de Upgrade a Dueño]
+
+### [BACKEND]:
+- [ ] Endpoint `POST /employee/upgrade-request` con formulario: CUIT, dirección, nombre de fantasía, tipo de negocio
+- [ ] Estado de solicitud: `UPGRADE_PENDIENTE` (campo en tabla `users` o tabla `upgrade_requests`)
+- [ ] Endpoint `PATCH /admin/upgrade-requests/:id/approve` restringido a `SYSTEM_OWNER`
+- [ ] Al aprobar: cambiar `role` de `EMPLOYEE` a `STORE_ADMIN`, crear registro en `venues`
+- [ ] Registro en `audit_log` del cambio de rol
+
+### [FRONTEND]:
+- [ ] Pantalla de solicitud de upgrade (`/app/dashboard/upgrade`) con formulario de verificación
+- [ ] Estado visible post-solicitud: "Tu solicitud está siendo revisada"
+- [ ] Vista en backoffice (`/app/admin/upgrade-requests`) para que `SYSTEM_OWNER` apruebe o rechace
+
+### [INTEGRACIÓN]:
+- [ ] E2E: empleado solicita upgrade → SYSTEM_OWNER aprueba → rol cambia a STORE_ADMIN → acceso a `/app/admin` habilitado
+
+---
+
+## [Tarea 1.6: Generador de QR Personal del Empleado]
+
+### [BACKEND]:
+- [ ] Endpoint `POST /employee/qr/generate` → genera JWT firmado con `employee_id` y `venue_id` (si aplica)
+- [ ] El QR generado debe contener el JWT firmado (no UUID plano) para validación en backend al escanearlo
+- [ ] Endpoint `GET /employee/qr` → retorna el QR activo del empleado
+- [ ] Validación del JWT del QR en el endpoint de inicio del flujo de cliente
+
+### [FRONTEND]:
+- [ ] Sección "Mi QR" en el dashboard del empleado
+- [ ] Visualización del QR generado (imagen o SVG) lista para imprimir o compartir
+- [ ] Indicación del nombre y foto del empleado en la pantalla destino post-escaneo (para verificación visual del cliente, mitigación de suplantación física)
+
+### [INTEGRACIÓN]:
+- [ ] E2E: empleado genera QR → cliente escanea → backend valida JWT del QR → carga pantalla de propina con nombre/foto del empleado correctos
+
+---
+
+## Reglas
+
+- Ninguna funcionalidad es "Done" sin Front + Back + Integración
+- Bloquear PR si TASKS.md tiene checks pendientes
+- `ownership.ts` es obligatorio en TODOS los endpoints del dashboard del empleado sin excepción
+- El CBU nunca viaja completo en respuestas JSON (enmascarar en backend, no en frontend)
+- Todo cambio de rol o verificación de identidad debe quedar en `audit_log`
