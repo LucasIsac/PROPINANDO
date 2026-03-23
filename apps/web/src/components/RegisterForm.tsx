@@ -10,14 +10,17 @@ import { RoleSelector } from '@/components/RoleSelector';
 import { PhotoUpload } from '@/components/PhotoUpload';
 
 interface RegisterFormProps {
+  step: number;
+  fotoUrl: string;
+  onFotoChange: (url: string) => void;
+  onStepChange: (step: number) => void;
   onComplete: (data: RegisterFormData, fotoUrl: string) => void;
 }
 
-export function RegisterForm({ onComplete }: RegisterFormProps) {
-  const [step, setStep] = useState(1);
+export function RegisterForm({ step, fotoUrl, onFotoChange, onStepChange, onComplete }: RegisterFormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [fotoUrl, setFotoUrl] = useState<string>('');
+  const [submittedData, setSubmittedData] = useState<RegisterFormData | null>(null);
 
   const {
     register,
@@ -42,27 +45,30 @@ export function RegisterForm({ onComplete }: RegisterFormProps) {
     },
   });
 
-  const watchedData = watch();
-
   const handleNext = async () => {
     const fieldsToValidate: (keyof RegisterFormData)[] = [
       'nombre', 'apellido', 'dni', 'email', 'telefono', 'cbu', 'password', 'confirmPassword', 'sector',
     ];
     const result = await trigger(fieldsToValidate);
     if (result) {
-      setStep(2);
+      onStepChange(2);
     }
   };
 
   const handleBack = () => {
-    setStep(1);
+    onStepChange(1);
   };
 
   const onSubmit = async (data: RegisterFormData) => {
-    if (!fotoUrl) {
-      return;
+    if (!fotoUrl) return;
+    setSubmittedData(data);
+    onStepChange(3);
+  };
+
+  const handleConfirm = () => {
+    if (submittedData) {
+      onComplete(submittedData, fotoUrl);
     }
-    onComplete(data, fotoUrl);
   };
 
   return (
@@ -170,7 +176,7 @@ export function RegisterForm({ onComplete }: RegisterFormProps) {
           </div>
 
           <RoleSelector
-            value={watchedData.sector}
+            value={watch('sector')}
             onChange={(value) => setValue('sector', value)}
             error={errors.sector?.message}
           />
@@ -188,10 +194,10 @@ export function RegisterForm({ onComplete }: RegisterFormProps) {
         <>
           <div className="flex flex-col items-center py-8">
             <PhotoUpload
-              onCapture={(url: string) => setFotoUrl(url)}
+              onCapture={onFotoChange}
               onError={(errorMsg: string) => console.error(errorMsg)}
             />
-            <p className="text-sm text-gray-500 mt-4 text-center">
+            <p className="text-sm text-[#6B7280] mt-4 text-center">
               Sube una foto clara de tu rostro para que los clientes te identifiquen
             </p>
           </div>
@@ -201,11 +207,55 @@ export function RegisterForm({ onComplete }: RegisterFormProps) {
               Volver
             </Button>
             <Button
-              type="submit"
-              disabled={!fotoUrl || isSubmitting}
+              type="button"
+              onClick={() => handleSubmit(onSubmit)()}
+              disabled={isSubmitting}
               loading={isSubmitting}
             >
-              {fotoUrl ? 'Continuar' : 'Sube tu foto primero'}
+              Continuar
+            </Button>
+          </div>
+        </>
+      )}
+
+      {/* Paso 3: Confirmación */}
+      {step === 3 && submittedData && (
+        <>
+          <div className="flex flex-col items-center py-4">
+            {fotoUrl && (
+              <img
+                src={fotoUrl}
+                alt="Foto de perfil"
+                className="w-24 h-24 rounded-full object-cover border-4 border-[#FDDC41]"
+              />
+            )}
+            <h3 className="text-lg font-bold text-[#1A1A1A] mt-4">
+              {submittedData.nombre} {submittedData.apellido}
+            </h3>
+            <p className="text-sm text-[#6B7280]">{submittedData.email}</p>
+          </div>
+
+          <div className="bg-gray-50 rounded-xl p-4 space-y-2">
+            <div className="flex justify-between">
+              <span className="text-sm text-[#6B7280]">DNI</span>
+              <span className="text-sm font-medium text-[#1A1A1A]">{submittedData.dni}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-[#6B7280]">Teléfono</span>
+              <span className="text-sm font-medium text-[#1A1A1A]">{submittedData.telefono}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-[#6B7280]">Sector</span>
+              <span className="text-sm font-medium text-[#1A1A1A]">{submittedData.sector}</span>
+            </div>
+          </div>
+
+          <div className="flex gap-3 pt-4">
+            <Button type="button" variant="outline" onClick={handleBack}>
+              Volver
+            </Button>
+            <Button onClick={handleConfirm}>
+              Crear Cuenta
             </Button>
           </div>
         </>

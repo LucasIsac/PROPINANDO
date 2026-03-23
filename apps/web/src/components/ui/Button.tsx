@@ -26,16 +26,16 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseClasses =
-      'inline-flex items-center justify-center font-bold rounded-xl transition-all duration-200 active:scale-[0.98]';
+      'inline-flex items-center justify-center font-bold transition-all duration-200 active:scale-[0.98]';
 
     const variantClasses = {
       primary:
-        'bg-[#DC143C] hover:bg-[#DC143C]/90 text-white shadow-lg shadow-[#DC143C]/20',
+        'bg-[#DC143C] hover:bg-[#DC143C]/90 text-white shadow-lg shadow-[#DC143C]/20 rounded-xl',
       secondary:
-        'bg-[#FDDC41] hover:bg-[#FDDC41]/90 text-gray-900 shadow-lg shadow-[#FDDC41]/20',
+        'bg-[#FDDC41] hover:bg-[#FDDC41]/90 text-[#1A1A1A] shadow-lg shadow-[#FDDC41]/20 rounded-xl',
       outline:
-        'border-2 border-[#DC143C] text-[#DC143C] hover:bg-[#DC143C]/10',
-      ghost: 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800',
+        'border-2 border-[#DC143C] text-[#DC143C] hover:bg-[#DC143C]/10 rounded-xl',
+      ghost: 'text-[#6B7280] hover:bg-gray-100',
     };
 
     const sizeClasses = {

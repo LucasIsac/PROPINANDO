@@ -15,11 +15,53 @@
 - [ ] Endpoint `GET /employee/me` con enmascaramiento de CBU en respuesta (`2100****4567`) — nunca el valor completo
 - [ ] Middleware `ownership.ts`: validar que el recurso pertenece al usuario del token en cada query
 
-### [FRONTEND]:
-- [ ] Pantalla de registro (`/app/register`) con campos: nombre, apellido, DNI, teléfono, CBU/CVU, foto de perfil
-- [ ] Validación de formulario en cliente con Zod (mismo contrato que backend)
-- [ ] Feedback visual de estado `PENDIENTE` post-registro ("Tu cuenta está en revisión")
-- [ ] Selector de categoría/sector al registrarse (Mozo, Cocina, Barra, Delivery, etc.)
+### [FRONTEND]: ✅ COMPLETADO
+- [x] Pantalla de registro (`/app/register`) con campos: nombre, apellido, DNI, teléfono, CBU/CVU, foto de perfil
+- [x] Validación de formulario en cliente con Zod (mismo contrato que backend)
+- [x] Feedback visual de estado `PENDIENTE` post-registro ("Tu cuenta está en revisión") - en alert()
+- [x] Selector de categoría/sector al registrarse (Mozo, Cocina, Barra, Delivery, Caja)
+
+### [CONTRATO API - FRONTEND → BACKEND]:
+**Endpoint:** `POST /api/auth/register`
+**Content-Type:** `application/json`
+
+**Request Body:**
+```json
+{
+  "nombre": "Juan",
+  "apellido": "Pérez",
+  "dni": "12345678",
+  "email": "juan@email.com",
+  "telefono": "1134567890",
+  "cbu": "0000003100012345678901",
+  "password": "Password123",
+  "sector": "MOZO",
+  "fotoUrl": "https://cloudinary.com/..."
+}
+```
+
+**Response Exitoso:**
+```json
+{
+  "success": true,
+  "message": "Tu cuenta está en revisión",
+  "user": {
+    "id": "uuid",
+    "email": "juan@email.com",
+    "status": "PENDIENTE"
+  }
+}
+```
+
+**Validaciones Zod (schema en `apps/web/src/schemas/register.schema.ts`):**
+- nombre: 2-50 caracteres
+- apellido: 2-50 caracteres
+- dni: 8 dígitos exactos
+- email: válido
+- telefono: 10-15 dígitos
+- cbu: 22 dígitos O alias 6-20 caracteres
+- password: mínimo 8 caracteres, 1 mayúscula, 1 número
+- sector: enum ['MOZO', 'COCINA', 'BARRA', 'DELIVERY', 'CAJA']
 
 ### [INTEGRACIÓN]:
 - [ ] E2E: registro completo → verificar estado `PENDIENTE` en DB → verificar CBU cifrado en DB → verificar respuesta enmascarada del endpoint

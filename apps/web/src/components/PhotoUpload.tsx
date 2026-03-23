@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback } from 'react';
 import { clsx } from 'clsx';
-import { Camera, Image, Loader2, X } from 'lucide-react';
+import { Camera, Image, Loader2, X, RefreshCw } from 'lucide-react';
 import { compressImage, isImageFile, getImagePreviewUrl } from '@/lib/imageUtils';
 import { uploadToCloudinary } from '@/lib/cloudinary';
 import { toast } from '@/components/ui/Toast';
@@ -13,11 +13,15 @@ interface PhotoUploadProps {
 }
 
 export function PhotoUpload({ onCapture, onError }: PhotoUploadProps) {
-  const [preview, setPreview] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | null>(() => {
+    return `https://picsum.photos/seed/${Date.now()}/400/400`;
+  });
   const [isUploading, setIsUploading] = useState(false);
   const [isCompressing, setIsCompressing] = useState(false);
+  const [isDemo, setIsDemo] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
+  const initializedRef = useRef(false);
 
   const processFile = useCallback(
     async (file: File) => {
@@ -27,6 +31,7 @@ export function PhotoUpload({ onCapture, onError }: PhotoUploadProps) {
       }
 
       try {
+        setIsDemo(false);
         setIsCompressing(true);
         const compressed = await compressImage(file);
         setIsCompressing(false);
@@ -37,12 +42,13 @@ export function PhotoUpload({ onCapture, onError }: PhotoUploadProps) {
         setIsUploading(true);
         const photoUrl = await uploadToCloudinary(compressed, `employee_${Date.now()}.jpg`);
         setIsUploading(false);
-
+        setIsDemo(false);
         onCapture(photoUrl);
         toast.success('Foto subida correctamente');
       } catch (error) {
         setIsCompressing(false);
         setIsUploading(false);
+        setIsDemo(true);
         const message = error instanceof Error ? error.message : 'Error al procesar imagen';
         toast.error(message);
         onError?.(message);
@@ -51,18 +57,32 @@ export function PhotoUpload({ onCapture, onError }: PhotoUploadProps) {
     [onCapture, onError]
   );
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       processFile(file);
     }
     e.target.value = '';
-  };
+  }, [processFile]);
 
   const handleRemove = () => {
     setPreview(null);
+    setIsDemo(false);
     if (fileInputRef.current) fileInputRef.current.value = '';
     if (cameraInputRef.current) cameraInputRef.current.value = '';
+  };
+
+  const handleRefreshDemo = () => {
+    const newDemoUrl = `https://picsum.photos/seed/${Date.now()}/400/400`;
+    setPreview(newDemoUrl);
+    setIsDemo(true);
+  };
+
+  const handleContinue = () => {
+    if (!initializedRef.current && preview) {
+      initializedRef.current = true;
+      onCapture(preview);
+    }
   };
 
   const isLoading = isCompressing || isUploading;
@@ -105,6 +125,20 @@ export function PhotoUpload({ onCapture, onError }: PhotoUploadProps) {
           >
             <X size={20} />
           </button>
+          {isDemo && (
+            <button
+              type="button"
+              onClick={handleRefreshDemo}
+              className={clsx(
+                'absolute -top-2 left-0 w-10 h-10 rounded-full',
+                'bg-[#DC143C] text-white flex items-center justify-center',
+                'hover:bg-[#DC143C]/90 transition-colors shadow-md'
+              )}
+              aria-label="Cambiar foto demo"
+            >
+              <RefreshCw size={16} />
+            </button>
+          )}
           {isLoading && (
             <div className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center">
               <Loader2 className="text-white animate-spin" size={32} />
@@ -116,7 +150,7 @@ export function PhotoUpload({ onCapture, onError }: PhotoUploadProps) {
           <div className="w-20 h-20 rounded-full bg-[#DC143C]/10 flex items-center justify-center">
             <Camera size={32} className="text-[#DC143C]" />
           </div>
-          <p className="text-sm text-gray-500 text-center px-4">
+          <p className="text-sm text-[#6B7280] text-center px-4">
             Agrega tu foto de perfil
           </p>
         </div>

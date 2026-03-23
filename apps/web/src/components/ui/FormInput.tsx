@@ -19,7 +19,7 @@ export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="text-sm font-semibold text-gray-700 dark:text-gray-300"
+            className="text-sm font-semibold text-[#1A1A1A]"
           >
             {label}
           </label>
@@ -34,15 +34,15 @@ export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
             ref={ref}
             id={inputId}
             className={clsx(
-              'w-full rounded-xl border bg-white dark:bg-gray-900 p-4 text-base',
+              'w-full rounded-xl border bg-white p-4 text-base text-[#1A1A1A]',
               'transition-colors duration-200',
-              'placeholder:text-gray-400',
+              'placeholder:text-[#6B7280]',
               'focus:outline-none focus:ring-2',
               'disabled:bg-gray-100 disabled:cursor-not-allowed',
               icon && 'pl-12',
               error
                 ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-                : 'border-gray-200 dark:border-gray-700 focus:ring-[#DC143C] focus:border-[#DC143C]',
+                : 'border-[#D1D5DB] focus:ring-[#DC143C] focus:border-[#DC143C]',
               className
             )}
             {...props}
@@ -54,7 +54,7 @@ export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
           </p>
         )}
         {helperText && !error && (
-          <p className="text-sm text-gray-500">{helperText}</p>
+          <p className="text-sm text-[#6B7280]">{helperText}</p>
         )}
       </div>
     );
