@@ -317,6 +317,34 @@ Backend      Frontend        ↓
 - Loading spinner
 - API: `POST /api/auth/login`
 
+### Register Page (Tarea 1.1)
+
+**Ruta:** `/register`
+
+**Componentes:**
+| Componente | Descripción |
+|------------|-------------|
+| `RegisterForm.tsx` | Formulario multi-paso (3 pasos) |
+| `RegisterConfirm.tsx` | Confirmación con preview |
+| `PhotoUpload.tsx` | Captura/galería con compresión |
+| `RoleSelector.tsx` | Selector de sector |
+| `ProgressStepper.tsx` | Barra de progreso |
+| `FormInput.tsx` | Input con iconos y errores |
+| `Button.tsx` | Botón con variantes |
+
+**Flujo:**
+1. Paso 1: Datos personales (nombre, apellido, DNI, email, teléfono, CBU, password)
+2. Paso 2: Foto de perfil (cámara o galería, compresión <500KB, Cloudinary)
+3. Paso 3: Confirmación (preview de datos y foto)
+
+**Tecnologías:**
+- React Hook Form + Zod validation
+- Cloudinary client-side upload
+- Sonner toasts
+- Skeleton loader (loading.tsx)
+
+**Estado:** 🔨 En desarrollo
+
 ---
 
 ## Reglas del Proyecto
