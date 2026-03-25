@@ -68,22 +68,27 @@
 
 ---
 
-## [Tarea 1.2: Verificación de Identidad (MVP manual)]
+## [Tarea 1.2: Verificación de Identidad (Automatizada con MetaMap)]
 
 ### [BACKEND]:
-- [ ] Campo `identity_verified` (Boolean, DEFAULT FALSE) ya contemplado en esquema `users`
-- [ ] Endpoint `PATCH /admin/employees/:id/verify` restringido a `STORE_ADMIN` y `SYSTEM_OWNER`
-- [ ] Al verificar: cambiar estado a `ACTIVO`, habilitar el empleado como destino de pago
-- [ ] Registro en `audit_log` de cada acción de verificación (user_id, ip, timestamp, entity)
-- [ ] Middleware RBAC en el endpoint de verificación
+- [ ] Endpoint `POST /webhooks/metamap` para recibir resultado de verificación de MetaMap
+- [ ] Validar firma HMAC del webhook de MetaMap (igual que con Mercado Pago)
+- [ ] Si resultado `approved`: cambiar estado empleado de `PENDIENTE` a `ACTIVO`
+- [ ] Si resultado `rejected` o `manual_review`: mantener `PENDIENTE`, notificar a SYSTEM_OWNER
+- [ ] Guardar `metamap_identity_id` en tabla `users` para trazabilidad
+- [ ] Registro en `audit_log`: "verificado automáticamente por MetaMap" + identityId + timestamp
+- [ ] Endpoint `PATCH /admin/employees/:id/verify` se mantiene restringido a `STORE_ADMIN` y `SYSTEM_OWNER` solo para casos `manual_review`
 
 ### [FRONTEND]:
-- [ ] Vista en panel Admin (`/app/admin/employees`) con listado de empleados `PENDIENTE`
-- [ ] Botón "Verificar identidad" con confirmación modal
-- [ ] Badge de estado visible: `PENDIENTE` / `ACTIVO` / `INACTIVO`
+- [ ] Reemplazar formulario de verificación manual por SDK de MetaMap (componente React oficial)
+- [ ] Lanzar flujo MetaMap embebido al finalizar el registro (foto DNI frente/dorso + selfie con liveness detection)
+- [ ] Feedback visual post-flujo: "Verificando tu identidad, en breve te confirmamos"
+- [ ] Badge de estado visible: `PENDIENTE` / `ACTIVO` / `INACTIVO` (sin cambios)
+- [ ] Panel admin mantiene listado de `PENDIENTE` solo para casos que MetaMap derive a `manual_review`
 
 ### [INTEGRACIÓN]:
-- [ ] E2E: admin verifica empleado → estado cambia a `ACTIVO` → empleado aparece disponible en flujo de cliente → audit_log registra la acción
+- [ ] E2E: empleado completa flujo MetaMap → webhook llega al backend → firma HMAC válida → estado cambia a `ACTIVO` → empleado disponible como destino de pago → audit_log registra identityId de MetaMap
+- [ ] E2E caso edge: MetaMap devuelve `manual_review` → estado queda `PENDIENTE` → SYSTEM_OWNER ve el caso en panel admin → aprueba manualmente → audit_log registra acción humana
 
 ---
 

@@ -392,11 +392,39 @@ Steps:
 | Backend | Node.js, Express.js |
 | DB | PostgreSQL, Prisma ORM |
 | Pagos | Mercado Pago SDK |
+| KYC | MetaMap (verificación de identidad) |
 | Testing | Vitest |
 | CI/CD | GitHub Actions |
 | Automatización | n8n |
 | Tipado | TypeScript, Zod |
 | Memoria | Engram |
+
+---
+
+## Verificación de Identidad: MetaMap
+
+Proveedor: MetaMap (ex Mati) — estándar de onboarding KYC para fintechs latinoamericanas.
+
+### Flujo
+1. El empleado completa el flujo embebido de MetaMap durante el registro (DNI frente/dorso + selfie con liveness detection).
+2. MetaMap notifica al backend vía webhook con el resultado: `approved`, `rejected` o `manual_review`.
+3. El backend valida la firma HMAC del webhook y actualiza el estado del empleado automáticamente.
+4. Solo los casos `manual_review` requieren intervención de un STORE_ADMIN o SYSTEM_OWNER.
+
+### Por qué MetaMap
+- SDK oficial para React, integración directa con el frontend existente.
+- Webhook compatible con el patrón ya usado para Mercado Pago (HMAC).
+- Cubre liveness detection: no alcanza con subir una foto de una foto.
+- Valida formato de DNI argentino nativo.
+- Costo: ~USD 0.50–1.50 por verificación exitosa según volumen.
+
+### Campos nuevos en tabla `users`
+- `metamap_identity_id` VARCHAR NULL — ID de la verificación en MetaMap para trazabilidad y auditoría.
+
+### Variables de entorno necesarias
+- `METAMAP_WEBHOOK_SECRET` — clave para validar firma HMAC de webhooks entrantes.
+- `METAMAP_CLIENT_ID` — credencial del SDK de frontend.
+- `METAMAP_CLIENT_SECRET` — credencial del backend.
 
 ---
 
@@ -406,3 +434,4 @@ Steps:
 2. Webhook handler con HMAC validation
 3. Checkout redirects
 4. Tests de integración
+5. Implementar Tarea 1.2: MetaMap Integration
