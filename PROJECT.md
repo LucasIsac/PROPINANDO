@@ -157,6 +157,11 @@ PROPINANDO/
 | Hito 1 | ✅ IMPLEMENTED | Schema Prisma (11 modelos, 3 enums) |
 | Hito 2 | ✅ IMPLEMENTED | PricingService (P=N+C, 15 tests, 95.65% cobertura) |
 | Hito 3 | 📋 READY | Mercado Pago (Checkout + Webhooks + HMAC) |
+| Hito 4 | 🔨 IN PROGRESS | Registro de Empleado (Frontend) + MetaMap Placeholder |
+| Hito 5 | 📋 PENDING | Login y Gestión de Sesión |
+| Hito 6 | 📋 PENDING | Dashboard de Ganancias Individual |
+| Hito 7 | 📋 PENDING | Upgrade a Dueño |
+| Hito 8 | 📋 PENDING | Generador de QR |
 
 ---
 
@@ -343,9 +348,31 @@ Backend      Frontend        ↓
 - Sonner toasts
 - Skeleton loader (loading.tsx)
 
-**Estado:** 🔨 En desarrollo
+**Estado:** ✅ Completado
 
----
+### Verify Page (Tarea 1.2)
+
+**Ruta:** `/verify`
+
+**Componentes:**
+| Componente | Descripción |
+|------------|-------------|
+| `VerifyIdentityButton.tsx` | Placeholder - simula flujo MetaMap |
+| `/api/auth/verify-mock` | API route mock retornando approved |
+
+**Flujo:**
+1. Badge PENDIENTE (amarillo/dorado)
+2. Texto explicativo + icono escudo
+3. Botón "Verificar identidad"
+4. Loading → Toast éxito (check verde)
+5. Badge ACTIVO (verde)
+
+**Placeholder - Para activar con credenciales reales:**
+- Cargar `METAMAP_CLIENT_ID` en `.env`
+- Reemplazar VerifyIdentityButton por SDK MetaMap
+- Activar validación HMAC en webhook
+
+**Estado:** 🔨 Placeholder completado (pendiente SDK real)
 
 ## Reglas del Proyecto
 
@@ -434,4 +461,5 @@ Proveedor: MetaMap (ex Mati) — estándar de onboarding KYC para fintechs latin
 2. Webhook handler con HMAC validation
 3. Checkout redirects
 4. Tests de integración
-5. Implementar Tarea 1.2: MetaMap Integration
+5. Activar SDK MetaMap con credenciales reales
+6. Integrar flujo /verify después del registro
