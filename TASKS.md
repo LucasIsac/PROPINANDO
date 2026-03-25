@@ -81,7 +81,7 @@
 
 ### [FRONTEND]:
 - [ ] Reemplazar formulario de verificación manual por SDK de MetaMap (componente React oficial)
-- [ ] Lanzar flujo MetaMap embebido al finalizar el registro (foto DNI frente/dorso + selfie con liveness detection)
+- [ ] **Flujo integrado al registro:** Después de completar el paso 3 (confirmar datos), lanzar automáticamente el flujo MetaMap embebido (foto DNI frente/dorso + selfie con liveness detection)
 - [ ] Feedback visual post-flujo: "Verificando tu identidad, en breve te confirmamos"
 - [ ] Badge de estado visible: `PENDIENTE` / `ACTIVO` / `INACTIVO` (sin cambios)
 - [ ] Panel admin mantiene listado de `PENDIENTE` solo para casos que MetaMap derive a `manual_review`
@@ -104,7 +104,7 @@
 - [ ] Endpoint de reset de contraseña: JWT firmado (15 min), un solo uso, invalidado en Redis post-consumo
 
 ### [FRONTEND]:
-- [ ] Pantalla de login (`/app/login`) con email y contraseña
+- [x] Pantalla de login (`/app/login`) existe (pendiente integración con backend)
 - [ ] Manejo silencioso del refresh de token (interceptor de requests)
 - [ ] Redirección automática post-login según rol (`/app/dashboard` para empleado, `/app/admin` para admin)
 - [ ] Pantalla de "Olvidé mi contraseña" con flujo de email
