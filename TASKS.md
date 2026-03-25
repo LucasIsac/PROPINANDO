@@ -15,6 +15,13 @@
 - [ ] Endpoint `GET /employee/me` con enmascaramiento de CBU en respuesta (`2100****4567`) — nunca el valor completo
 - [ ] Middleware `ownership.ts`: validar que el recurso pertenece al usuario del token en cada query
 
+### [FRONTEND]: ✅ COMPLETADO (Placeholder)
+- [x] Pantalla intermedia `/verify` con botón "Verificar identidad"
+- [x] VerifyIdentityButton placeholder que simula flujo sin SDK
+- [x] API route mock `/api/auth/verify-mock` retorna approved
+- [ ] **TODO:** Reemplazar placeholder por SDK real de MetaMap cuando haya credenciales
+- [ ] **TODO:** Integrar flujo después del registro (redirección a /verify)
+
 ### [FRONTEND]: ✅ COMPLETADO
 - [x] Pantalla de registro (`/app/register`) con campos: nombre, apellido, DNI, teléfono, CBU/CVU, foto de perfil
 - [x] Validación de formulario en cliente con Zod (mismo contrato que backend)
@@ -79,10 +86,13 @@
 - [ ] Registro en `audit_log`: "verificado automáticamente por MetaMap" + identityId + timestamp
 - [ ] Endpoint `PATCH /admin/employees/:id/verify` se mantiene restringido a `STORE_ADMIN` y `SYSTEM_OWNER` solo para casos `manual_review`
 
-### [FRONTEND]:
-- [ ] Reemplazar formulario de verificación manual por SDK de MetaMap (componente React oficial)
-- [ ] **Flujo integrado al registro:** Después de completar el paso 3 (confirmar datos), lanzar automáticamente el flujo MetaMap embebido (foto DNI frente/dorso + selfie con liveness detection)
-- [ ] Feedback visual post-flujo: "Verificando tu identidad, en breve te confirmamos"
+### [FRONTEND]: ✅ COMPLETADO (Placeholder)
+- [x] Pantalla intermedia `/verify` con botón "Verificar identidad"
+- [x] VerifyIdentityButton placeholder que simula flujo sin SDK
+- [x] API route mock `/api/auth/verify-mock` retorna approved
+- [ ] **TODO:** Reemplazar placeholder por SDK real de MetaMap cuando haya credenciales
+- [ ] **TODO:** Integrar flujo después del registro (redirección a /verify)
+
 - [ ] Badge de estado visible: `PENDIENTE` / `ACTIVO` / `INACTIVO` (sin cambios)
 - [ ] Panel admin mantiene listado de `PENDIENTE` solo para casos que MetaMap derive a `manual_review`
 
@@ -102,6 +112,13 @@
 - [ ] Endpoint `POST /auth/logout` → marcar Refresh Token como `revoked=true` en DB (blacklist)
 - [ ] Rate limiting: bloqueo temporal tras 5 intentos fallidos de login (RNF-11)
 - [ ] Endpoint de reset de contraseña: JWT firmado (15 min), un solo uso, invalidado en Redis post-consumo
+
+### [FRONTEND]: ✅ COMPLETADO (Placeholder)
+- [x] Pantalla intermedia `/verify` con botón "Verificar identidad"
+- [x] VerifyIdentityButton placeholder que simula flujo sin SDK
+- [x] API route mock `/api/auth/verify-mock` retorna approved
+- [ ] **TODO:** Reemplazar placeholder por SDK real de MetaMap cuando haya credenciales
+- [ ] **TODO:** Integrar flujo después del registro (redirección a /verify)
 
 ### [FRONTEND]:
 - [x] Pantalla de login (`/app/login`) existe (pendiente integración con backend)
@@ -123,6 +140,13 @@
 - [ ] Todos los endpoints con middleware `ownership.ts`: `WHERE employee_id = :tokenUserId`
 - [ ] Respuesta nunca expone comisión bruta ni monto de Propinando (RNF-10)
 
+### [FRONTEND]: ✅ COMPLETADO (Placeholder)
+- [x] Pantalla intermedia `/verify` con botón "Verificar identidad"
+- [x] VerifyIdentityButton placeholder que simula flujo sin SDK
+- [x] API route mock `/api/auth/verify-mock` retorna approved
+- [ ] **TODO:** Reemplazar placeholder por SDK real de MetaMap cuando haya credenciales
+- [ ] **TODO:** Integrar flujo después del registro (redirección a /verify)
+
 ### [FRONTEND]:
 - [ ] Dashboard del empleado (`/app/dashboard`) con: total del día, total del mes, neto estimado
 - [ ] Feed en tiempo real de últimas propinas (SSE)
@@ -143,6 +167,13 @@
 - [ ] Al aprobar: cambiar `role` de `EMPLOYEE` a `STORE_ADMIN`, crear registro en `venues`
 - [ ] Registro en `audit_log` del cambio de rol
 
+### [FRONTEND]: ✅ COMPLETADO (Placeholder)
+- [x] Pantalla intermedia `/verify` con botón "Verificar identidad"
+- [x] VerifyIdentityButton placeholder que simula flujo sin SDK
+- [x] API route mock `/api/auth/verify-mock` retorna approved
+- [ ] **TODO:** Reemplazar placeholder por SDK real de MetaMap cuando haya credenciales
+- [ ] **TODO:** Integrar flujo después del registro (redirección a /verify)
+
 ### [FRONTEND]:
 - [ ] Pantalla de solicitud de upgrade (`/app/dashboard/upgrade`) con formulario de verificación
 - [ ] Estado visible post-solicitud: "Tu solicitud está siendo revisada"
@@ -160,6 +191,13 @@
 - [ ] El QR generado debe contener el JWT firmado (no UUID plano) para validación en backend al escanearlo
 - [ ] Endpoint `GET /employee/qr` → retorna el QR activo del empleado
 - [ ] Validación del JWT del QR en el endpoint de inicio del flujo de cliente
+
+### [FRONTEND]: ✅ COMPLETADO (Placeholder)
+- [x] Pantalla intermedia `/verify` con botón "Verificar identidad"
+- [x] VerifyIdentityButton placeholder que simula flujo sin SDK
+- [x] API route mock `/api/auth/verify-mock` retorna approved
+- [ ] **TODO:** Reemplazar placeholder por SDK real de MetaMap cuando haya credenciales
+- [ ] **TODO:** Integrar flujo después del registro (redirección a /verify)
 
 ### [FRONTEND]:
 - [ ] Sección "Mi QR" en el dashboard del empleado
