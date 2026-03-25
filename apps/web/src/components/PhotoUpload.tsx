@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { clsx } from 'clsx';
 import { Camera, Image, Loader2, X, RefreshCw } from 'lucide-react';
 import { compressImage, isImageFile, getImagePreviewUrl } from '@/lib/imageUtils';
@@ -13,15 +13,23 @@ interface PhotoUploadProps {
 }
 
 export function PhotoUpload({ onCapture, onError }: PhotoUploadProps) {
-  const [preview, setPreview] = useState<string | null>(() => {
-    return `https://picsum.photos/seed/${Date.now()}/400/400`;
-  });
+  const [preview, setPreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [isCompressing, setIsCompressing] = useState(false);
-  const [isDemo, setIsDemo] = useState(true);
+  const [isDemo, setIsDemo] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
-  const initializedRef = useRef(false);
+  const isFirstRender = useRef(true);
+
+  useEffect(() => {
+    if (isFirstRender.current && !preview) {
+      isFirstRender.current = false;
+      const demoUrl = `https://picsum.photos/seed/${Date.now()}/400/400`;
+      setPreview(demoUrl);
+      setIsDemo(true);
+      setTimeout(() => onCapture(demoUrl), 0);
+    }
+  }, [preview, onCapture]);
 
   const processFile = useCallback(
     async (file: File) => {
@@ -76,13 +84,6 @@ export function PhotoUpload({ onCapture, onError }: PhotoUploadProps) {
     const newDemoUrl = `https://picsum.photos/seed/${Date.now()}/400/400`;
     setPreview(newDemoUrl);
     setIsDemo(true);
-  };
-
-  const handleContinue = () => {
-    if (!initializedRef.current && preview) {
-      initializedRef.current = true;
-      onCapture(preview);
-    }
   };
 
   const isLoading = isCompressing || isUploading;

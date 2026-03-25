@@ -1,6 +1,6 @@
 'use client';
 
-import { Toaster } from 'sonner';
+import { Toaster, toast } from 'sonner';
 
 export function ToastProvider() {
   return (
@@ -8,9 +8,11 @@ export function ToastProvider() {
       position="top-center"
       toastOptions={{
         style: {
-          background: '#1A1A1A',
-          color: '#fff',
-          border: 'none',
+          background: '#FFFFFF',
+          color: '#1A1A1A',
+          borderLeft: '4px solid #DC143C',
+          borderRadius: '8px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
         },
         className: 'font-sans',
       }}
@@ -18,4 +20,4 @@ export function ToastProvider() {
   );
 }
 
-export { toast } from 'sonner';
+export { toast };

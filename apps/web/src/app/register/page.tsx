@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { ProgressStepper } from '@/components/ui';
+import { CheckCircle } from 'lucide-react';
+import { ProgressStepper, toast } from '@/components/ui';
 import { RegisterForm } from '@/components/RegisterForm';
 
 export default function RegisterPage() {
@@ -10,7 +11,25 @@ export default function RegisterPage() {
 
   const handleComplete = (data: unknown, url: string) => {
     console.log('Form submitted:', { data, url });
-    alert('¡Registro exitoso! Tu cuenta está en revisión.');
+    toast('', {
+      icon: <CheckCircle className="text-[#10B981]" size={24} />,
+      description: (
+        <div className="flex items-start gap-3">
+          <div>
+            <span className="font-semibold text-[#1A1A1A] block">¡Registro exitoso!</span>
+            <span className="text-[#4B5563]">Tu cuenta está en revisión. Te notificaremos cuando esté activa.</span>
+          </div>
+        </div>
+      ),
+      duration: 5000,
+      style: {
+        background: '#FFFFFF',
+        borderLeft: '4px solid #DC143C',
+        borderRadius: '8px',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+        padding: '12px 16px',
+      },
+    });
   };
 
   return (

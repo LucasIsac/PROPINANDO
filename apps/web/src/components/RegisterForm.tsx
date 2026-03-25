@@ -28,6 +28,7 @@ export function RegisterForm({ step, fotoUrl, onFotoChange, onStepChange, onComp
     watch,
     setValue,
     trigger,
+    getValues,
     formState: { errors, isSubmitting },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
@@ -60,7 +61,6 @@ export function RegisterForm({ step, fotoUrl, onFotoChange, onStepChange, onComp
   };
 
   const onSubmit = async (data: RegisterFormData) => {
-    if (!fotoUrl) return;
     setSubmittedData(data);
     onStepChange(3);
   };
@@ -208,7 +208,16 @@ export function RegisterForm({ step, fotoUrl, onFotoChange, onStepChange, onComp
             </Button>
             <Button
               type="button"
-              onClick={() => handleSubmit(onSubmit)()}
+              onClick={async () => {
+                const fieldsToValidate: (keyof RegisterFormData)[] = [
+                  'nombre', 'apellido', 'dni', 'email', 'telefono', 'cbu', 'password', 'confirmPassword', 'sector',
+                ];
+                const isValid = await trigger(fieldsToValidate);
+                if (isValid) {
+                  setSubmittedData(getValues());
+                  onStepChange(3);
+                }
+              }}
               disabled={isSubmitting}
               loading={isSubmitting}
             >
