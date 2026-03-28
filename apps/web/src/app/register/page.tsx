@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { CheckCircle } from 'lucide-react';
 import { ProgressStepper, toast } from '@/components/ui';
 import { RegisterForm } from '@/components/RegisterForm';
+import { Navbar } from '@/components/Navbar';
 
 export default function RegisterPage() {
   const [step, setStep] = useState(1);
@@ -33,29 +34,32 @@ export default function RegisterPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#F8F9FA] py-8 px-4">
-      <div className="max-w-md mx-auto">
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-center text-[#1A1A1A]">
-            Registro de Empleado
-          </h1>
-          <p className="text-center text-[#6B7280] mt-2">
-            Completa los datos para comenzar
-          </p>
-        </div>
+    <>
+      <Navbar />
+      <main className="min-h-screen bg-[#F8F9FA] pt-20 px-4 pb-8">
+        <div className="max-w-md mx-auto">
+          <div className="mb-8">
+            <h1 className="text-2xl font-bold text-center text-[#1A1A1A]">
+              Registro de Empleado
+            </h1>
+            <p className="text-center text-[#6B7280] mt-2">
+              Completa los datos para comenzar
+            </p>
+          </div>
 
-        <ProgressStepper currentStep={step} totalSteps={3} labels={['Datos', 'Foto', 'Confirmar']} />
+          <ProgressStepper currentStep={step} totalSteps={3} labels={['Datos', 'Foto', 'Confirmar']} />
 
-        <div className="mt-8 bg-white rounded-2xl shadow-xl p-6">
-          <RegisterForm 
-            step={step} 
-            fotoUrl={fotoUrl}
-            onFotoChange={setFotoUrl}
-            onStepChange={setStep} 
-            onComplete={handleComplete} 
-          />
+          <div className="mt-8 bg-white rounded-2xl shadow-xl p-6">
+            <RegisterForm 
+              step={step} 
+              fotoUrl={fotoUrl}
+              onFotoChange={setFotoUrl}
+              onStepChange={setStep} 
+              onComplete={handleComplete} 
+            />
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }
