@@ -314,6 +314,26 @@ Backend      Frontend        ↓
 
 ## Frontend
 
+### Home Page
+
+**Ruta:** `/`
+
+**Componentes:**
+| Componente | Descripción |
+|------------|-------------|
+| `FadeIn.tsx` | Componentes de animación reutilizables |
+| `FloatingIcon` | Iconos flotando con bounce |
+| `StaggerContainer` | Contenedor con stagger animation |
+
+**Diseño:**
+- Logo: PROPINANDO en #DC143C
+- Iconos flotando: 💰💸💵💴
+- Tarjetas de beneficios con stagger
+- Botones: Iniciar Sesión / Registrarse
+- Animaciones: Framer Motion
+
+**Estado:** ✅ Completado
+
 ### Login Page
 
 - Validación Zod (email, password min 6 chars)
@@ -321,6 +341,9 @@ Backend      Frontend        ↓
 - Iconos Lucide React
 - Loading spinner
 - API: `POST /api/auth/login`
+- Navbar con "Volver"
+
+**Estado:** ✅ Completado
 
 ### Register Page (Tarea 1.1)
 
@@ -336,6 +359,7 @@ Backend      Frontend        ↓
 | `ProgressStepper.tsx` | Barra de progreso |
 | `FormInput.tsx` | Input con iconos y errores |
 | `Button.tsx` | Botón con variantes |
+| `Navbar.tsx` | Navegación con volver |
 
 **Flujo:**
 1. Paso 1: Datos personales (nombre, apellido, DNI, email, teléfono, CBU, password)
@@ -358,6 +382,7 @@ Backend      Frontend        ↓
 | Componente | Descripción |
 |------------|-------------|
 | `VerifyIdentityButton.tsx` | Placeholder - simula flujo MetaMap |
+| `Navbar.tsx` | Navegación con volver |
 | `/api/auth/verify-mock` | API route mock retornando approved |
 
 **Flujo:**
