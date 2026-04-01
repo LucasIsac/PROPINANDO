@@ -2,9 +2,10 @@
 
 import { useState } from 'react';
 import { CheckCircle } from 'lucide-react';
+import Link from 'next/link';
+import Image from 'next/image';
 import { ProgressStepper, toast } from '@/components/ui';
 import { RegisterForm } from '@/components/RegisterForm';
-import { Navbar } from '@/components/Navbar';
 
 export default function RegisterPage() {
   const [step, setStep] = useState(1);
@@ -34,15 +35,31 @@ export default function RegisterPage() {
   };
 
   return (
-    <>
-      <Navbar />
-      <main className="min-h-screen bg-[#F8F9FA] pt-20 px-4 pb-8">
+    <div className="min-h-screen bg-[#F8F9FA] px-4 pb-8">
+      <Link href="/" className="absolute top-4 left-4">
+        <div className="w-8 h-8 relative">
+          <Image
+            src="/images/isotipo/isotipo.png"
+            alt="PROPINANDO"
+            fill
+            className="object-contain"
+          />
+        </div>
+      </Link>
+
+      <main className="pt-16">
         <div className="max-w-md mx-auto">
-          <div className="mb-8">
-            <h1 className="text-2xl font-bold text-center text-[#1A1A1A]">
-              Registro de Empleado
-            </h1>
-            <p className="text-center text-[#6B7280] mt-2">
+          <div className="mb-8 text-center">
+            <div className="relative w-full max-w-[60%] mx-auto aspect-[3/1]">
+              <Image
+                src="/images/logo/PROPINANDO.png"
+                alt="PROPINANDO"
+                fill
+                className="object-contain"
+                priority
+              />
+            </div>
+            <p className="mt-4 text-sm text-[#6B7280]">
               Completa los datos para comenzar
             </p>
           </div>
@@ -60,6 +77,6 @@ export default function RegisterPage() {
           </div>
         </div>
       </main>
-    </>
+    </div>
   );
 }

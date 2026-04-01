@@ -157,9 +157,9 @@ PROPINANDO/
 | Hito 1 | ✅ IMPLEMENTED | Schema Prisma (11 modelos, 3 enums) |
 | Hito 2 | ✅ IMPLEMENTED | PricingService (P=N+C, 15 tests, 95.65% cobertura) |
 | Hito 3 | 📋 READY | Mercado Pago (Checkout + Webhooks + HMAC) |
-| Hito 4 | 🔨 IN PROGRESS | Registro de Empleado (Frontend) + MetaMap Placeholder |
-| Hito 5 | 📋 PENDING | Login y Gestión de Sesión |
-| Hito 6 | 📋 PENDING | Dashboard de Ganancias Individual |
+| Hito 4 | ✅ COMPLETADO | Registro de Empleado (Frontend) + MetaMap Placeholder |
+| Hito 5 | ✅ COMPLETADO | Login y Gestión de Sesión |
+| Hito 6 | ✅ COMPLETADO | Dashboard de Ganancias Individual (Tiempo Real) |
 | Hito 7 | 📋 PENDING | Upgrade a Dueño |
 | Hito 8 | 📋 PENDING | Generador de QR |
 
@@ -398,6 +398,27 @@ Backend      Frontend        ↓
 - Activar validación HMAC en webhook
 
 **Estado:** 🔨 Placeholder completado (pendiente SDK real)
+
+### Dashboard Page (Tarea 1.4)
+
+**Ruta:** `/dashboard`
+
+**Componentes:**
+| Componente | Descripción |
+|------------|-------------|
+| Header con isotipo | Isotipo 32x32px decorativo + "¡Buen turno, [Nombre]!" |
+| Botón ojo privacidad | Toggle para blur de montos |
+| Tarjeta #DC143C | "Neto ganado hoy" en bloque sólido carmesí |
+| Sección Reseñas | Estrellas #FDDC41, hora, comentario |
+| Footer de Estado | Alias enmascarado + check verde |
+
+**Características:**
+- Modo Privacidad: montos blur, reseñas visibles
+- Sin texto de comisión 8%
+- Bordes redondeados 16px (rounded-2xl)
+- Espacios amplios, tipografía Sans-Serif
+
+**Estado:** ✅ Completado
 
 ## Reglas del Proyecto
 
